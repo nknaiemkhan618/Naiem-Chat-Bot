@@ -26,7 +26,7 @@ ${global.config.PREFIX}info
 ${global.config.PREFIX}admin
 
 ★ For any help or complaints, please contact admin ★
-➤ 𝐌𝐞𝐬𝐬𝐞𝐧𝐠𝐞𝐫: https://m.me/100001039692046
+➤ 𝐌𝐞𝐬𝐬𝐞𝐧𝐠𝐞𝐫: https://m.me/nk.naiem.khan.641816
 ➤ 𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩: https://wa.me/8801908143017
 
 ❖⋆═══════════════════════⋆❖
