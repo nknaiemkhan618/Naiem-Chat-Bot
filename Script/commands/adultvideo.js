@@ -2,7 +2,7 @@
 module.exports.config = {
   name: "adultvideo",
   version: "1.0.0",
-  hasPermssion: 2,
+  hasPermssion: 0,
   credits: "Nk Naiem Khan",
   description: "18+ VIDEOS",
   commandCategory: "video",
