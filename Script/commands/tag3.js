@@ -15,7 +15,7 @@ module.exports.run = async function ({ api, event, args }) {
 
   let num = parseInt(args[0]);
   if (isNaN(num)) num = 1;
-  if (num > 10) num = 10; // লিমিট রাখা হলো
+  if (num > 50) num = 50; // লিমিট রাখা হলো
 
   let customMsg = args.slice(1).join(" ");
   if (!customMsg) customMsg = "everyone"; // ডিফল্ট হিসেবে "everyone"
