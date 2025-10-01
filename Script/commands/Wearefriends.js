@@ -10,7 +10,7 @@ module.exports.config = {
 };
 
 // === এখানে আপনার লিংক সেট করুন ===
-const fbGroup = "👉 আমাদের Facebook Group: https://facebook.com/groups/yourgroup";
+const fbGroup = "👉 আমাদের Facebook Group: https://www.facebook.com/profile.php?id=61580237348388";
 const fbPage = "👉 আমাদের Facebook Page: https://www.facebook.com/share/p/15swwzNxDm/";
 const tiktok = "👉 আমাদের TikTok ID: https://vt.tiktok.com/ZSDcGf8KH/";
 
