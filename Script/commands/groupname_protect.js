@@ -16,7 +16,7 @@ module.exports.config = {
   name: "groupname_protect",
   version: "1.0.0",
   hasPermssion: 0,
-  credits: "Mohammad Akash",
+  credits: "Nk Naiem Khan",
   description: "Automatically save and restore group name when changed",
   commandCategory: "admin",
   usages: "auto (no prefix needed for protection — admin commands available)",
