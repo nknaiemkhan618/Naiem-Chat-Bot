@@ -1,11 +1,10 @@
 /**
  * groupname_protect.js
  * Auto-save & auto-restore group name when changed.
- * Usage: auto-initializes — no manual setup required.
- *
- * Ensure:
- * 1) Bot has admin rights in the group (so it can setTitle).
- * 2) Place this file in your modules folder and restart the bot.
+ * Supports:
+ *  - Auto-save first group name
+ *  - Allow group/bot admin to change name (and save it)
+ *  - Block non-admin name changes (restore old name + mention user)
  */
 
 const fs = require("fs");
@@ -13,10 +12,10 @@ const path = require("path");
 
 module.exports.config = {
   name: "groupname_protect",
-  version: "1.1.0",
+  version: "2.0.0",
   hasPermssion: 0,
   credits: "Nk Naiem Khan",
-  description: "Automatically save and restore group name when changed, with user mention",
+  description: "Automatically save and restore group name when changed",
   commandCategory: "admin",
   usages: "auto",
   cooldowns: 3
@@ -25,6 +24,7 @@ module.exports.config = {
 const DATA_DIR = path.resolve(__dirname, "..", "data");
 const DB_PATH = path.join(DATA_DIR, "groupNames.json");
 
+// === DB Functions ===
 function ensureDB() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   if (!fs.existsSync(DB_PATH)) fs.writeFileSync(DB_PATH, JSON.stringify({}), "utf8");
@@ -44,6 +44,7 @@ function writeDB(db) {
   fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf8");
 }
 
+// === Check admin ===
 async function isThreadAdmin(api, threadID, senderID) {
   try {
     const info = await new Promise((res, rej) =>
@@ -56,64 +57,50 @@ async function isThreadAdmin(api, threadID, senderID) {
   }
 }
 
+// === Commands ===
 module.exports.run = async ({ api, event }) => {
   const { threadID, senderID, body = "" } = event;
-  const text = body.toLowerCase();
+  const text = (body || "").toLowerCase();
+  const db = readDB();
 
-  if (text.startsWith("protect name on") || text.startsWith("protect on")) {
-    if (!(await isThreadAdmin(api, threadID, senderID)))
-      return api.sendMessage("⚠️ অ্যাডমিন পারমিশন লাগবে।", threadID);
+  // Protect ON
+  if (text.startsWith("protect on")) {
+    const ok = await isThreadAdmin(api, threadID, senderID);
+    if (!ok) return api.sendMessage("⚠️ অ্যাডমিন হওয়া দরকার।", threadID);
 
-    const db = readDB();
-    db[threadID] = db[threadID] || {};
-    db[threadID].protected = true;
+    const info = await new Promise((res, rej) =>
+      api.getThreadInfo(threadID, (err, d) => (err ? rej(err) : res(d)))
+    );
 
-    try {
-      const info = await new Promise((res, rej) =>
-        api.getThreadInfo(threadID, (err, d) => (err ? rej(err) : res(d)))
-      );
-      db[threadID].name = info.threadName || "Group";
-    } catch {}
-
+    db[threadID] = {
+      name: info.threadName || "Group",
+      protected: true
+    };
     writeDB(db);
-    return api.sendMessage("✅ Group Name Protection ON", threadID);
+
+    return api.sendMessage(
+      `✅ গ্রুপ নাম প্রোটেকশন চালু!\nসেভড নাম: ${db[threadID].name}`,
+      threadID
+    );
   }
 
-  if (text.startsWith("protect name off") || text.startsWith("protect off")) {
-    if (!(await isThreadAdmin(api, threadID, senderID)))
-      return api.sendMessage("⚠️ অ্যাডমিন পারমিশন লাগবে।", threadID);
+  // Protect OFF
+  if (text.startsWith("protect off")) {
+    const ok = await isThreadAdmin(api, threadID, senderID);
+    if (!ok) return api.sendMessage("⚠️ অ্যাডমিন হওয়া দরকার।", threadID);
 
-    const db = readDB();
-    db[threadID] = db[threadID] || {};
+    if (!db[threadID]) db[threadID] = {};
     db[threadID].protected = false;
     writeDB(db);
-    return api.sendMessage("⛔ Group Name Protection OFF", threadID);
+
+    return api.sendMessage("⛔ গ্রুপ নাম প্রোটেকশন বন্ধ করা হয়েছে।", threadID);
   }
 
-  if (text.startsWith("save group name") || text.startsWith("save name")) {
-    if (!(await isThreadAdmin(api, threadID, senderID)))
-      return api.sendMessage("⚠️ অ্যাডমিন পারমিশন লাগবে।", threadID);
-
-    try {
-      const info = await new Promise((res, rej) =>
-        api.getThreadInfo(threadID, (err, d) => (err ? rej(err) : res(d)))
-      );
-      const db = readDB();
-      db[threadID] = db[threadID] || {};
-      db[threadID].name = info.threadName || "Group";
-      db[threadID].protected = true;
-      writeDB(db);
-      return api.sendMessage(`✅ Name Saved: ${db[threadID].name}`, threadID);
-    } catch {
-      return api.sendMessage("❌ এরর: গ্রুপ ইনফো নেয়া যায়নি।", threadID);
-    }
-  }
-
-  if (text === "group protect status" || text === "protect status") {
-    const db = readDB();
+  // Status
+  if (text === "protect status") {
     const entry = db[threadID] || {};
     return api.sendMessage(
-      `⚙️ Group Name Status\n\nName: ${entry.name || "—"}\nProtected: ${
+      `⚙️ Group Protect Status\n\nনাম: ${entry.name || "Not saved"}\nProtected: ${
         entry.protected ? "ON" : "OFF"
       }`,
       threadID
@@ -121,41 +108,61 @@ module.exports.run = async ({ api, event }) => {
   }
 };
 
-// === Updated handleEvent with mention ===
+// === Auto Protection & Restore ===
 module.exports.handleEvent = async ({ api, event }) => {
   try {
     const { threadID, logMessageType, logMessageData, author } = event;
-
     if (logMessageType !== "log:thread-name") return;
 
     const db = readDB();
-    const entry = db[threadID];
-    if (!entry?.protected || !entry.name) return;
+    const entry = db[threadID] || {};
+
+    // --- First time auto-save ---
+    if (!entry.name) {
+      const info = await new Promise((res, rej) =>
+        api.getThreadInfo(threadID, (err, d) => (err ? rej(err) : res(d)))
+      );
+
+      db[threadID] = {
+        name: info.threadName || "Group",
+        protected: true
+      };
+      writeDB(db);
+
+      return api.sendMessage(
+        `✅ প্রথমবার গ্রুপ নাম অটো-সেভ করা হয়েছে:\n${db[threadID].name}`,
+        threadID
+      );
+    }
+
+    if (!entry.protected) return;
 
     const savedName = entry.name;
     const newName = logMessageData?.name || "";
 
+    const info = await new Promise((res, rej) =>
+      api.getThreadInfo(threadID, (err, data) => (err ? rej(err) : res(data)))
+    );
+
+    const isAdmin = info.adminIDs.some(a => a.id == author);
+    const isBotAdmin = info.adminIDs.some(a => a.id == api.getCurrentUserID());
+
+    // If admin/bot changes → accept & save new
+    if (isAdmin || isBotAdmin) {
+      db[threadID].name = newName;
+      writeDB(db);
+      return api.sendMessage(`ℹ️ অ্যাডমিন নাম পরিবর্তন করেছেন। নতুন নাম সেভ হয়েছে:\n${newName}`, threadID);
+    }
+
+    // If normal user changes → restore old
     if (newName && newName !== savedName) {
       api.setTitle(savedName, threadID, (err) => {
-        if (err) {
-          console.error("Failed to restore name:", err);
-          return api.sendMessage(
-            "❌ নাম রিস্টোর করতে পারছি না — বটকে অ্যাডমিন দিন।",
-            threadID
-          );
-        }
+        if (err) return;
 
-        // mention তৈরি
-        const mentions = [
-          {
-            id: author,
-            tag: "@user"
-          }
-        ];
-
+        const mentions = [{ id: author, tag: "@user" }];
         api.sendMessage(
           {
-            body: `⚠️ ${newName} নামে গ্রুপ চেঞ্জ করেছিলেন!\n\n👉 @user, আপনি নাম বদলেছেন, কিন্তু বট আগের নাম ফিরিয়ে দিল:\n✅ ${savedName}`,
+            body: `⚠️ @user, আপনি ${newName} নামে নাম পাল্টেছেন!\nকিন্তু প্রোটেকশন চালু আছে, তাই বট আগের নাম ফিরিয়ে দিল:\n✅ ${savedName}`,
             mentions
           },
           threadID
