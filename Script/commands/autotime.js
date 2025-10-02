@@ -4,46 +4,78 @@ const chalk = require('chalk');
 
 module.exports.config = {
     name: 'autosent',
-    version: '10.0.1',
+    version: '10.0.2',
     hasPermssion: 0,
-    credits: 'Shahadat Islam',
-    description: 'Automatically sends messages at scheduled times (BD Time)',
+    credits: 'NK NAIEM KHAN',
+    description: 'Automatically sends Islamic messages every hour with time & date (BD Time)',
     commandCategory: 'group messenger',
     usages: '[]',
     cooldowns: 3
 };
 
-const messages = [
-    { time: '12:00 AM', message: 'এখন সময় রাত 12:00 AM ⏳\nঅনেক রাত হলো, ঘুমিয়ে পড় Bby Good Night 😴💤❤️', special: null },
-    { time: '1:00 AM', message: 'এখন সময় রাত 1:00 AM ⏳\nকিরে তুই এখনো ঘুমাস নাই? তাড়াতাড়ি ঘুমিয়ে পড়!😾😴🛌', special: null },
-    { time: '2:00 AM', message: 'এখন সময় রাত 2:00 AM ⏳\nঘুমে আয় ভাই! এখনো জাইগা আসোস ক্যান?😤👊💤', special: null },
-    { time: '3:00 AM', message: 'এখন সময় রাত 3:00 AM ⏳\nসবাই ঘুমাইয়া গেছে, তুই এখন জাইগা আসোস ক্যান?🙄🌃🛌', special: null },
-    { time: '4:00 AM', message: 'এখন সময় ভোর 4:00 AM ⏳\nএকটু পর আজান হবে, সময় হয়ে গেছে। 🕌🕋🕓', special: null },
-    { time: '5:00 AM', message: 'এখন সময় ভোর 5:00 AM ⏳\nফজরের আজান হয়ে গেছে, নামাজটা পরে নিও পিও~ 🕌✨🤲💖', special: null },
-    { time: '6:00 AM', message: 'এখন সময় সকাল 6:00 AM ⏳\nআসসালামুয়ালাইকুম Good Morning Bby! এখন বিছানা থেকে উঠে ব্যায়াম টা করে ফেল 🌅💖😳', special: null },
-    { time: '7:00 AM', message: 'এখন সময় সকাল 7:00 AM ⏳\nঘুম ভাঙতেই মোবাইল! দাঁত ব্রাশটা করবি তো নাকি!🛌➡️📱', special: null },
-    { time: '8:00 AM', message: 'এখন সময় সকাল 8:00 AM ⏳\nপিও, মোবাইল রেখে দাঁত ব্রাশ করে খেয়ে নাও!📱🪥🍽️', special: null },
-    { time: '9:00 AM', message: 'এখন সময় সকাল 9:00 AM ⏳\nBby, Breakfast korco?🍳🥞💖', special: null },
-    { time: '10:00 AM', message: 'এখন সময় সকাল 10:00 AM ⏳\nকিরে ভন্ড, তুই আজ কলেজ যাস নাই? 😜📚🙄', special: null },
-    { time: '11:00 AM', message: 'এখন সময় সকাল 11:00 AM ⏳\nনাটক কম কর পিও~ বস এখন বিজি আছে!🙄📱💼', special: null },
-    { time: '12:00 PM', message: 'এখন সময় দুপুর 12:00 PM ⏳\nGood Afternoon! 🌞🙌🌸', special: null },
-    { time: '1:00 PM', message: 'এখন সময় দুপুর 1:00 PM ⏳\nভন্ড কোথাকার মোবাইল বন্ধ করে জোহরের নামাজ পড়ে নাও😻❣️🥰', special: null },
-    { time: '2:00 PM', message: 'এখন সময় দুপুর 2:00 PM ⏳\nভন্ড কোথাকার, মোবাইল রাখ! গোসল করে খাওয়া-দাওয়া করে নে🔪🛁🍽️', special: null },
-    { time: '3:00 PM', message: 'এখন সময় বিকেল 3:00 PM ⏳\nJan, তোমাকে ছাড়া আর দুপুরে ঘুম হয় না….!😴💔🌙', special: null },
-    { time: '4:00 PM', message: 'এখন সময় বিকেল 4:00 PM ⏳\nঅনেক গরম পড়েছিল আজ! 🥵🌞💦', special: null },
-    { time: '5:00 PM', message: 'এখন সময় বিকেল 5:00 PM ⏳\nপরিস্থিতি যেমনি হোক না কেন, সব সময় হলে হাসতেই হবে! 😅🕒🙂', special: null },
-    { time: '6:00 PM', message: 'এখন সময় সন্ধ্যা 6:00 PM ⏳\nGood Evening Everyone! সবাই হাত মুখ ধুয়ে নাও! 🌆👐💦', special: null },
-    { time: '7:00 PM', message: 'এখন সময় সন্ধ্যা 7:00 PM ⏳\nকিরে ভন্ড, তুই আজ পড়তে বসছিলি নাকি?😏📚🤔', special: null },
-    { time: '8:00 PM', message: 'এখন সময় রাত 8:00 PM ⏳\nওই ওই, এতো bot bot না করে আমার বস নাঈম কে একটা গফ দে...!🫰😎🔥', special: null },
-    { time: '9:00 PM', message: 'এখন সময় রাত 9:00 PM ⏳\nআমার cute bby টাহ খানা খাইছে...!😘🍽️❤️', special: null },
-    { time: '10:00 PM', message: 'এখন সময় রাত 10:00 PM ⏳\nকিরে ভন্ড, খাইবি কখন? সারাদিন মোবাইল টিপস..!😜📱😾', special: null },
-    { time: '11:00 PM', message: 'এখন সময় রাত 11:00 PM ⏳\nযে ছেড়ে গেছে 😔 তাকে ভুলে যাও 🙂 আমার বস নাঈম এর সাথে প্রেম করে তাকে দেখিয়ে দাও...!🙈🐸🤗', special: null }
+// ২৪ ঘণ্টার জন্য ২৪টা আলাদা উক্তি
+const quotes = [
+    "🕋 প্রতিটি কাজ আল্লাহর জন্য করুন..!\n✨ হাসুন, ভালো উদ্দীপনা ছড়িয়ে দিন..!\n📿 নামাজ, দোয়া ও ভালো কাজ—এগুলোই জীবনের শক্তি..!",
+    "🌸 ধৈর্য ধরুন, আল্লাহ ধৈর্যশীলদের ভালোবাসেন..!",
+    "🤲 দোয়া হলো মুমিনের শক্তি..!",
+    "☪️ নামাজ হলো জান্নাতের চাবি..!",
+    "🕌 ফজর হলো বরকতের শুরু..!",
+    "🌼 অভিভাবকের দোয়া জান্নাতের টিকিট..!",
+    "💖 কারো প্রতি অহংকার করবেন না..!",
+    "📖 কোরআন পড়ুন, জীবনে শান্তি আসবে..!",
+    "🕊️ ক্ষমা করতে শিখুন..!",
+    "💎 হালাল রিজিকই আসল বরকত..!",
+    "☝️ আল্লাহ ছাড়া কারো উপর নির্ভর করবেন না..!",
+    "🌺 দান করলে সম্পদ বাড়ে, কমে না..!",
+    "🕌 জুমার দিনে দরুদ পাঠাতে ভুলবেন না..!",
+    "🌙 তাহাজ্জুদে দোয়া কবুল হয়..!",
+    "💞 ভাইয়ের প্রতি সদাচরণ করুন..!",
+    "🕋 তওবা করুন, আল্লাহ ভালোবাসেন..!",
+    "🫶 অন্যকে সাহায্য করলে আল্লাহও সাহায্য করবেন..!",
+    "🌸 সন্তানের জন্য দোয়া করুন..!",
+    "🌟 সত্য কথা বলুন, মিথ্যা থেকে দূরে থাকুন..!",
+    "💐 ছোটদের প্রতি স্নেহশীল হোন..!",
+    "🌼 বড়দের প্রতি শ্রদ্ধাশীল হোন..!",
+    "🕊️ সালাম ছড়ান, ভালোবাসা ছড়ান..!",
+    "☀️ সকালে বিসমিল্লাহ দিয়ে দিন শুরু করুন..!",
+    "🌏 দুনিয়া সাময়িক, আখিরাত স্থায়ী..!"
 ];
+
+// প্রতি ঘণ্টায় কোন quote যাবে সেটা অটো সেট
+const messages = Array.from({ length: 24 }, (_, i) => {
+    let timeLabel = moment().hour(i).minute(0).format("h:00 A");
+    return {
+        time: timeLabel,
+        message: (now) => {
+            let date = moment(now).tz("Asia/Dhaka");
+            return (
+`╔═❖═❖═❖═❖═❖═❖═╗  
+ ⏰ 𝗧𝗜𝗠𝗘 & 𝗗𝗔𝗧𝗘 ⏰   
+ ╚═❖═❖═❖═❖═❖═❖═╝
+    ╔═✪═🕒═✪═╗
+    🕰️ 𝐓𝐢𝐦𝐞: ${date.format("h:mm A")}
+    ╚════════╝
+📅 𝐃𝐚𝐭𝐞: ${date.format("D")}  
+📛 𝐃𝐚𝐲: ${date.format("dddd")}  
+🗓️ 𝐌𝐨𝐧𝐭𝐡: ${date.format("MMMM")}  
+📆 𝐘𝐞𝐚𝐫: ${date.format("YYYY")}  
+━━━━━━━━━━━━━━━━━━
+
+${quotes[i]}
+
+━━━━━━━━━━━━━━━━━━  
+👑 𝐁𝐨𝐭 𝐎𝐰𝐧𝐞𝐫 ➠ NK NAIEM KHAN  
+
+🌟 𝐂𝐫𝐞𝐚𝐭𝗼𝐫 ━ NK NAIEM KHAN 🌟  
+━━━━━━━━━━━━━━━━━━`);
+        }
+    };
+});
 
 module.exports.onLoad = ({ api }) => {
     console.log(chalk.bold.hex("#00c300")("============ AUTOSENT COMMAND LOADED (BD TIME) ============"));
 
-    messages.forEach(({ time, message }) => {
+    messages.forEach(({ time, message }, index) => {
         const [hour, minute, period] = time.split(/[: ]/);
         let hour24 = parseInt(hour, 10);
         if (period === 'PM' && hour !== '12') {
@@ -60,7 +92,8 @@ module.exports.onLoad = ({ api }) => {
         schedule.scheduleJob(rule, () => {
             if (!global.data?.allThreadID) return;
             global.data.allThreadID.forEach(threadID => {
-                api.sendMessage(message, threadID, (error) => {
+                const msg = message(new Date());
+                api.sendMessage(msg, threadID, (error) => {
                     if (error) {
                         console.error(`Failed to send message to ${threadID}:`, error);
                     }
@@ -68,10 +101,8 @@ module.exports.onLoad = ({ api }) => {
             });
         });
 
-        console.log(chalk.hex("#00FFFF")(`Scheduled (BDT): ${time} => ${message}`));
+        console.log(chalk.hex("#00FFFF")(`Scheduled (BDT): ${time} => Quote #${index + 1}`));
     });
 };
 
-module.exports.run = () => {
-    // Main logic is in onLoad
-};
+module.exports.run = () => {};
