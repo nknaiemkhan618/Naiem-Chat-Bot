@@ -1,14 +1,13 @@
 const axios = require("axios");
-
 const simsim = "https://simsimi.cyberbot.top";
 
 module.exports.config = {
   name: "baby",
-  version: "1.0.3",
+  version: "1.0.5",
   hasPermssion: 0,
-  credits: "ULLASH",
-  description: "Cute AI Baby Chatbot | Talk, Teach & Chat with Emotion ☢️",
-  commandCategory: "simsim",
+  credits: "NK NAIEM KHAN",
+  description: "Cute AI Baby Chatbot | Talk, Teach & Chat with Emotion 💖",
+  commandCategory: "fun",
   usages: "[message/query]",
   cooldowns: 0,
   prefix: false
@@ -19,9 +18,10 @@ module.exports.run = async function ({ api, event, args, Users }) {
     const uid = event.senderID;
     const senderName = await Users.getNameUser(uid);
     const query = args.join(" ").toLowerCase();
-    
+
+    // যদি কিছু না লেখা হয়
     if (!query) {
-      const ran = ["Bolo baby", "hum"];
+      const ran = ["বলো baby 💬", "হুম বলো জানু 😚", "ডেকো না বারবার 😴"];
       const r = ran[Math.floor(Math.random() * ran.length)];
       return api.sendMessage(r, event.threadID, (err, info) => {
         if (!err) {
@@ -29,55 +29,49 @@ module.exports.run = async function ({ api, event, args, Users }) {
             name: module.exports.config.name,
             messageID: info.messageID,
             author: event.senderID,
-            type: "simsimi"
+            type: "chat"
           });
         }
       });
     }
 
+    // === Teach System ===
+    if (args[0] === "teach") {
+      const parts = query.replace("teach ", "").split(" - ");
+      if (parts.length < 2)
+        return api.sendMessage("🧠 ব্যবহার: teach [Question] - [Reply]", event.threadID, event.messageID);
+
+      const [ask, ans] = parts;
+      const res = await axios.get(`${simsim}/teach?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(ans)}&senderID=${uid}&senderName=${encodeURIComponent(senderName)}`);
+      return api.sendMessage(res.data.message || "✅ শেখানো সম্পন্ন!", event.threadID, event.messageID);
+    }
+
+    // === List ===
+    if (args[0] === "list") {
+      const res = await axios.get(`${simsim}/list`);
+      if (res.data.code === 200) {
+        return api.sendMessage(
+          `♾ শেখা প্রশ্নঃ ${res.data.totalQuestions}\n⭐ রিপ্লাই সংরক্ষণঃ ${res.data.totalReplies}\n🧠 ডেভেলপারঃ ${res.data.author}`,
+          event.threadID, event.messageID
+        );
+      } else return api.sendMessage("⚠️ তালিকা আনতে সমস্যা হয়েছে!", event.threadID, event.messageID);
+    }
+
+    // === Remove ===
     if (["remove", "rm"].includes(args[0])) {
       const parts = query.replace(/^(remove|rm)\s*/, "").split(" - ");
       if (parts.length < 2)
-        return api.sendMessage(" | Use: remove [Question] - [Reply]", event.threadID, event.messageID);
+        return api.sendMessage("ব্যবহার: remove [Question] - [Reply]", event.threadID, event.messageID);
+
       const [ask, ans] = parts;
       const res = await axios.get(`${simsim}/delete?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(ans)}`);
       return api.sendMessage(res.data.message, event.threadID, event.messageID);
     }
 
-    if (args[0] === "list") {
-      const res = await axios.get(`${simsim}/list`);
-      if (res.data.code === 200) {
-        return api.sendMessage(
-          `♾ Total Questions Learned: ${res.data.totalQuestions}\n★ Total Replies Stored: ${res.data.totalReplies}\n☠︎︎ Developer: ${res.data.author}`,
-          event.threadID,
-          event.messageID
-        );
-      } else {
-        return api.sendMessage(`Error: ${res.data.message || "Failed to fetch list"}`, event.threadID, event.messageID);
-      }
-    }
-
-    if (args[0] === "edit") {
-      const parts = query.replace("edit ", "").split(" - ");
-      if (parts.length < 3)
-        return api.sendMessage(" | Use: edit [Question] - [OldReply] - [NewReply]", event.threadID, event.messageID);
-      const [ask, oldReply, newReply] = parts;
-      const res = await axios.get(`${simsim}/edit?ask=${encodeURIComponent(ask)}&old=${encodeURIComponent(oldReply)}&new=${encodeURIComponent(newReply)}`);
-      return api.sendMessage(res.data.message, event.threadID, event.messageID);
-    }
-
-    if (args[0] === "teach") {
-      const parts = query.replace("teach ", "").split(" - ");
-      if (parts.length < 2)
-        return api.sendMessage(" | Use: teach [Question] - [Reply]", event.threadID, event.messageID);
-      const [ask, ans] = parts;
-      const res = await axios.get(`${simsim}/teach?ask=${encodeURIComponent(ask)}&ans=${encodeURIComponent(ans)}&senderID=${uid}&senderName=${encodeURIComponent(senderName)}`);
-      return api.sendMessage(`${res.data.message || "Reply added successfully!"}`, event.threadID, event.messageID);
-    }
-
+    // === Normal Chat ===
     const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(query)}&senderName=${encodeURIComponent(senderName)}`);
     const responses = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
-    
+
     for (const reply of responses) {
       await new Promise((resolve) => {
         api.sendMessage(reply, event.threadID, (err, info) => {
@@ -86,16 +80,17 @@ module.exports.run = async function ({ api, event, args, Users }) {
               name: module.exports.config.name,
               messageID: info.messageID,
               author: event.senderID,
-              type: "simsimi"
+              type: "chat"
             });
           }
           resolve();
         }, event.messageID);
       });
     }
+
   } catch (err) {
     console.error(err);
-    return api.sendMessage(`| Error in baby command: ${err.message}`, event.threadID, event.messageID);
+    return api.sendMessage(`❌ Error: ${err.message}`, event.threadID, event.messageID);
   }
 };
 
@@ -107,7 +102,7 @@ module.exports.handleReply = async function ({ api, event, Users, handleReply })
 
     const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(replyText)}&senderName=${encodeURIComponent(senderName)}`);
     const responses = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
-    
+
     for (const reply of responses) {
       await new Promise((resolve) => {
         api.sendMessage(reply, event.threadID, (err, info) => {
@@ -116,17 +111,17 @@ module.exports.handleReply = async function ({ api, event, Users, handleReply })
               name: module.exports.config.name,
               messageID: info.messageID,
               author: event.senderID,
-              type: "simsimi"
+              type: "chat"
             });
           }
           resolve();
         }, event.messageID);
-      }
-      );
+      });
     }
+
   } catch (err) {
     console.error(err);
-    return api.sendMessage(` | Error in handleReply: ${err.message}`, event.threadID, event.messageID);
+    return api.sendMessage(`❌ HandleReply Error: ${err.message}`, event.threadID, event.messageID);
   }
 };
 
@@ -136,13 +131,10 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     if (!raw) return;
 
     const senderName = await Users.getNameUser(event.senderID);
-    const senderID = event.senderID;
 
-    if (
-      raw === "baby" || raw === "bot" || raw === "bby" ||
-      raw === "jannu" || raw === "xan" || raw === "বেপি" || raw === "বট" || raw === "বেবি"
-    ) {
-      const greetings = [
+    // যখন কেউ শুধু "baby" বা "bot" বলে
+    if (["baby", "bot", "bby", "বেবি", "বট", "জানু", "xan"].includes(raw)) {
+      const replies = [
         "বেশি bot Bot করলে leave নিবো কিন্তু😒😒",
     "শুনবো না😼 তুমি আমার নাঈম কে প্রেম করাই দাও নাই🥺পচা তুমি🥺",
     "আমি আবাল দের সাথে কথা বলি না,ok😒",
@@ -156,7 +148,7 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     "আজ বট বলে অসম্মান করছি,😰😿",
     "Hop beda😾,Boss বল boss😼",
     "চুপ থাক ,নাই তো তোর দাত ভেগে দিবো কিন্তু",
-    "আমাকে না ডেকে মেয়ে হলে নাঈম এর ইনবক্সে চলে যা 🌚😂 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/nk.naiem.khan.641816",
+    "আমাকে না ডেকে মেয়ে হলে নাঈম এর ইনবক্সে চলে যা 🌚😂 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/profile.php?id=61581060231392",
     "আমাকে বট না বলে , নাঈম কে জানু বল জানু 😘",
     "বার বার Disturb করছিস কোনো😾,আমার জানুর সাথে ব্যাস্ত আছি😋",
     "আরে বলদ এতো ডাকিস কেন🤬",
@@ -168,7 +160,7 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     "আমাকে ডেকো না,আমি নাঈম এর সাথে ব্যাস্ত আছি",
     "কি হলো , মিস্টেক করচ্ছিস নাকি🤣",
     "বলো কি বলবা, সবার সামনে বলবা নাকি?🤭🤏",
-    "জান মেয়ে হলে নাঈম এর ইনবক্সে চলে যাও 😍🫣💕 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/nk.naiem.khan.641816",
+    "জান মেয়ে হলে নাঈম এর ইনবক্সে চলে যাও 😍🫣💕 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/profile.php?id=61581060231392",
     "কালকে দেখা করিস তো একটু 😈",
     "হা বলো, শুনছি আমি 😏",
     "আর কত বার ডাকবি ,শুনছি তো",
@@ -183,7 +175,7 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     "jang hanga korba😒😬",
     "হুম জান তোমার অইখানে উম্মমাহ😷😘",
     "আসসালামু আলাইকুম বলেন আপনার জন্য কি করতে পারি..!🥰",
-    "ভালোবাসার নামক আবলামি করতে চাইলে নাঈম এর ইনবক্সে গুতা দিন ~🙊😘🤣 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/nk.naiem.khan.641816",
+    "ভালোবাসার নামক আবলামি করতে চাইলে নাঈম এর ইনবক্সে গুতা দিন ~🙊😘🤣 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/profile.php?id=61581060231392",
     "আমাকে এতো না ডেকে নাঈম এর কে একটা গফ দে 🙄",
     "আমাকে এতো না ডেকছ কেন ভলো টালো বাসো নাকি🤭🙈",
     "🌻🌺💚-আসসালামু আলাইকুম ওয়া রাহমাতুল্লাহ-💚🌺🌻",
@@ -200,9 +192,9 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     "জান মেয়ে হলে চিপায় আসো নাঈম থেকে অনেক ভালোবাসা শিখছি তোমার জন্য-🙊🙈😽",
     "ইসস এতো ডাকো কেনো লজ্জা লাগে তো-🙈🖤🌼",
     "আমার নাঈম পক্ষ থেকে তোমারে এতো এতো ভালোবাসা-🥰😽🫶 আমার নাঈম ইসলামে'র জন্য দোয়া করবেন-💝💚🌺🌻",
-    "- ভালোবাসা নামক আব্লামি করতে মন চাইলে নাঈম এর ইনবক্স চলে যাও-🙊🥱👅 🌻𝐅𝐀𝐂𝐄𝐁𝐎𝐎𝐊 𝐈𝐃 𝐋𝐈𝐍𝐊 🌻:- https://www.facebook.com/nk.naiem.khan.641816",
+    "- ভালোবাসা নামক আব্লামি করতে মন চাইলে নাঈম এর ইনবক্স চলে যাও-🙊🥱👅 🌻𝐅𝐀𝐂𝐄𝐁𝐎𝐎𝐊 𝐈𝐃 𝐋𝐈𝐍𝐊 🌻:- https://www.facebook.com/profile.php?id=61581060231392",
     "আমার জান তুমি শুধু আমার আমি তোমারে ৩৬৫ দিন ভালোবাসি-💝🌺😽",
-    "কিরে প্রেম করবি তাহলে নাঈম এর ইনবক্সে গুতা দে 😘🤌 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/nk.naiem.khan.641816",
+    "কিরে প্রেম করবি তাহলে নাঈম এর ইনবক্সে গুতা দে 😘🤌 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/profile.php?id=61581060231392",
     "জান আমার নাঈম কে বিয়ে করবা-🙊😘🥳",
     "-আন্টি-🙆-আপনার মেয়ে-👰‍♀️-রাতে আমারে ভিদু কল দিতে বলে🫣-🥵🤤💦",
     "oii-🥺🥹-এক🥄 চামচ ভালোবাসা দিবা-🤏🏻🙂",
@@ -218,7 +210,7 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     "দিনশেষে পরের 𝐁𝐎𝐖 সুন্দর-☹️🤧",
     "-তাবিজ কইরা হইলেও ফ্রেম এক্কান করমুই তাতে যা হই হোক-🤧🥱🌻",
     "-ছোটবেলা ভাবতাম বিয়ে করলে অটোমেটিক বাচ্চা হয়-🥱-ওমা এখন দেখি কাহিনী অন্যরকম-😦🙂🌻",
-    "প্রেম করতে চাইলে নাঈম এর ইনবক্সে চলে যা 😏🐸 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/nk.naiem.khan.641816",
+    "প্রেম করতে চাইলে নাঈম এর ইনবক্সে চলে যা 😏🐸 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/profile.php?id=61581060231392",
     "-আজ একটা বিন নেই বলে ফেসবুকের নাগিন-🤧-গুলোরে নাঈম ধরতে পারছে না-🐸🥲",
     "-চুমু থাকতে তোরা বিড়ি খাস কেন বুঝা আমারে-😑😒🐸⚒️",
     "—যে ছেড়ে গেছে-😔-তাকে ভুলে যাও-🙂-নাঈম এর সাথে প্রেম করে তাকে দেখিয়ে দাও-🙈🐸🤗",
@@ -228,7 +220,7 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     "এত অহংকার করে লাভ নেই-🌸মৃত্যুটা নিশ্চিত শুধু সময়টা অ'নিশ্চিত-🖤🙂",
     "-দিন দিন কিছু মানুষের কাছে অপ্রিয় হয়ে যাইতেছি-🙂😿🌸",
     "ভালোবাসার নামক আবলামি করতে চাইলে নাঈম এর ইনবক্সে গুতা দিন🤣😼",
-    "মেয়ে হলে নাঈম এর ইনবক্সে চলে যা 🤭🤣😼 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/nk.naiem.khan.641816",
+    "মেয়ে হলে নাঈম এর ইনবক্সে চলে যা 🤭🤣😼 𝐅𝐚𝐜𝐞𝐛𝐨𝐨𝐤 𝐋𝐢𝐧𝐤 : https://www.facebook.com/profile.php?id=61581060231392",
     "হুদাই আমারে শয়তানে লারে-😝😑☹️",
     "-𝗜 𝗟𝗢𝗩𝗘 𝗬𝗢𝗨-😽-আহারে ভাবছো তোমারে প্রোপজ করছি-🥴-থাপ্পর দিয়া কিডনী লক করে দিব-😒-ভুল পড়া বের করে দিবো-🤭🐸",
     "-আমি একটা দুধের শিশু-😇-🫵𝗬𝗢𝗨🐸💦",
@@ -244,59 +236,11 @@ module.exports.handleEvent = async function ({ api, event, Users }) {
     "-🫵তোমারে প্রচুর ভাল্লাগে-😽-সময় মতো প্রপোজ করমু বুঝছো-🔨😼-ছিট খালি রাইখো- 🥱🐸🥵",
     "-আজ থেকে আর কাউকে পাত্তা দিমু না -!😏-কারণ আমি ফর্সা হওয়ার ক্রিম কিনছি -!🙂🐸"
       ];
-
-      const randomReply = greetings[Math.floor(Math.random() * greetings.length)];
-      const mention = {
-        body: `@${senderName} ${randomReply}`,
-        mentions: [{
-          tag: `@${senderName}`,
-          id: senderID
-        }]
-      };
-
-      return api.sendMessage(mention, event.threadID, (err, info) => {
-        if (!err) {
-          global.client.handleReply.push({
-            name: module.exports.config.name,
-            messageID: info.messageID,
-            author: event.senderID,
-            type: "simsimi"
-          });
-        }
-      }, event.messageID);
+      const text = replies[Math.floor(Math.random() * replies.length)];
+      return api.sendMessage(text, event.threadID, event.messageID);
     }
 
-    if (
-      raw.startsWith("baby ") || raw.startsWith("bot ") || raw.startsWith("bby ") ||
-      raw.startsWith("jannu ") || raw.startsWith("xan ") ||
-      raw.startsWith("বেপি ") || raw.startsWith("বট ") || raw.startsWith("বেবি ")
-    ) {
-      const query = raw
-        .replace(/^baby\s+|^bot\s+|^bby\s+|^jan\s+|^xan\s+|^জান\s+|^বট\s+|^বেবি\s+/i, "")
-        .trim();
-      if (!query) return;
-
-      const res = await axios.get(`${simsim}/simsimi?text=${encodeURIComponent(query)}&senderName=${encodeURIComponent(senderName)}`);
-      const responses = Array.isArray(res.data.response) ? res.data.response : [res.data.response];
-      
-      for (const reply of responses) {
-        await new Promise((resolve) => {
-          api.sendMessage(reply, event.threadID, (err, info) => {
-            if (!err) {
-              global.client.handleReply.push({
-                name: module.exports.config.name,
-                messageID: info.messageID,
-                author: event.senderID,
-                type: "simsimi"
-              });
-            }
-            resolve();
-          }, event.messageID);
-        });
-      }
-    }
   } catch (err) {
     console.error(err);
-    return api.sendMessage(`| Error in handleEvent: ${err.message}`, event.threadID, event.messageID);
   }
 };
