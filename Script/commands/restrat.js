@@ -4,10 +4,10 @@ const { exec } = require("child_process");
 
 module.exports.config = {
   name: "restart",
-  version: "5.1.0",
+  version: "5.3.0",
   hasPermssion: 2,
   credits: "Nk Naiem Khan",
-  description: "Ultimate cinematic live battery restart with spark animations and timer",
+  description: "Cinematic restart with all updates in a single message",
   commandCategory: "system",
   usages: "[restart bot]",
   cooldowns: 5
@@ -15,86 +15,83 @@ module.exports.config = {
 
 module.exports.run = async ({ api, event }) => {
   const { threadID } = event;
-  const botName = "Ashraful";
+  const botName = "না্ঁঈ্ঁমে্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ";
 
-  // Initial startup message
   const startTime = moment().tz("Asia/Dhaka").format("hh:mm:ss A, DD MMM YYYY");
-  const startMsg = `
+
+  // Initial message
+  let batteryLines = Array(10).fill("");
+  let fullMessage = `
 ⚡╔════════════════════════╗
 🔋 ${botName} SYSTEM RESTARTING ⚡
 ╚════════════════════════╝
 
 🕒 Time: ${startTime}
-💬 Status: Initializing super cinematic restart...
+💬 Status: Preparing restart sequence...
+✨╔════════ BATTERY STATUS ════════╗
+${batteryLines.join("\n")}
+✨╚═══════════════════════════╝
 `;
-  await api.sendMessage(startMsg, threadID);
-  console.clear();
 
-  // Battery setup
-  const totalLines = 10;
-  let batteryLines = Array(totalLines).fill(`[⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜] 0% - ⚡ Charging...`);
-  let batteryMsg = `🔋 ${botName} Restarting...\n✨╔════════ BATTERY STATUS ════════╗\n`;
-  batteryMsg += batteryLines.join("\n") + `\n✨╚═══════════════════════════╝`;
-  const sentMsg = await api.sendMessage(batteryMsg, threadID);
+  const sentMsg = await api.sendMessage(fullMessage, threadID);
 
-  // Live cinematic charging with burst + spark emojis
-  const flashColors = ["🟩", "🟨", "🟧", "🟩"];
-  const burstEmojis = ["⚡", "💥", "🔥", "✨", "💫", "🌟"];
-  const sparkEmojis = ["⚡", "💨", "🔌", "💥"];
-
-  for (let i = 0; i < totalLines; i++) {
+  // Update battery lines
+  for (let i = 0; i < 10; i++) {
     const percent = (i + 1) * 10;
+    const greenBars = "🟩".repeat(i + 1);
+    const emptyBars = "⬜".repeat(10 - (i + 1));
+    const bar = greenBars + emptyBars;
+    const text = "RESTARTING...";
+    const timer = moment().tz("Asia/Dhaka").format("hh:mm:ss A");
 
-    for (let flash of flashColors) {
-      // Mini burst + spark animation
-      const burst = Array(Math.floor(Math.random() * 3) + 1)
-        .map(() => burstEmojis[Math.floor(Math.random() * burstEmojis.length)])
-        .join("");
-      const spark = sparkEmojis[Math.floor(Math.random() * sparkEmojis.length)];
+    batteryLines[i] = `[${bar}] ${percent}% - ${text} ⏱ ${timer}`;
 
-      const bar = flash.repeat(i + 1) + "⬜".repeat(totalLines - (i + 1));
-      const text = percent < 100 ? `${spark}${burst} Charging...` : "✅ Fully Charged!";
-      const timer = moment().tz("Asia/Dhaka").format("hh:mm:ss A");
+    // Rebuild full message
+    fullMessage = `
+⚡╔════════════════════════╗
+🔋 ${botName} SYSTEM RESTARTING ⚡
+╚════════════════════════╝
 
-      batteryLines[i] = `[${bar}] ${percent}% - ${text} ⏱ ${timer}`;
+🕒 Time: ${startTime}
+💬 Status: Restart sequence running...
+✨╔════════ BATTERY STATUS ════════╗
+${batteryLines.join("\n")}
+✨╚═══════════════════════════╝
+`;
 
-      batteryMsg = `🔋 ${botName} Restarting...\n✨╔════════ BATTERY STATUS ════════╗\n`;
-      batteryMsg += batteryLines.join("\n") + `\n✨╚═══════════════════════════╝`;
+    // Edit the same message each time
+    await api.editMessage(sentMsg.messageID, fullMessage);
+    console.log(chalk.green(`[Line ${i + 1}] [${bar}] ${percent}% - ${text} ⏱ ${timer}`));
 
-      // Live update single message
-      await api.editMessage(sentMsg.messageID, batteryMsg);
-
-      console.log(chalk.cyan(`[Line ${i + 1}] [${bar}] ${percent}% - ${text} ⏱ ${timer}`));
-      await new Promise(resolve => setTimeout(resolve, 350));
-    }
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
 
-  // Cinematic Power ON sequence
+  // Cinematic Power ON sequence appended to same message
   const cinematicSequence = [
     "🔌 Power Restored...",
     "⚙️ Booting Core Modules...",
     "🚀 Activating AI Systems...",
-    "🤖 Welcome Back, " + botName + "!",
-    "🎉 Restart Successful! ✅\n💳 Credits: Nk Naiem Khan"
+    `🤖 Welcome Back, ${botName}!`,
+    "🎉 Restart Successful! ✅",
+    "💳 Credits: Nk Naiem Khan"
   ];
 
-  for (const line of cinematicSequence) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  for (let line of cinematicSequence) {
+    fullMessage += `\n${line}`;
+    await api.editMessage(sentMsg.messageID, fullMessage);
     console.log(chalk.greenBright(line));
-    await api.sendMessage(line, threadID);
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  // Auto Restart
+  // Final auto restart
   setTimeout(() => {
-    api.sendMessage(`🎇 ${botName} is now ONLINE 🔥\n🕒 Time: ${moment().tz("Asia/Dhaka").format("hh:mm:ss A, DD MMM YYYY")}\n💳 Credits: Nk Naiem Khan`, threadID);
-    console.log(chalk.greenBright("\n🎉 BOT FULLY ONLINE & READY TO RUN!\n"));
-
     exec("npm start", (error, stdout, stderr) => {
       if (error) console.error(chalk.red(`❌ Restart Failed: ${error.message}`));
       if (stderr) console.error(chalk.red(stderr));
       console.log(chalk.green(stdout));
     });
 
+    console.log(chalk.greenBright("\n🎉 BOT FULLY ONLINE & READY TO RUN!\n"));
     process.exit(1);
   }, 1500);
 };
