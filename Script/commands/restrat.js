@@ -1,11 +1,11 @@
 /**
  * ==========================================================
- * ⚡ CINEMATIC BATTERY RESTART SYSTEM
+ * 🔋 BATTERY STYLE AUTO RESTART COMMAND
  * 🧠 Developer: 𝐂𝐘𝐁𝐄𝐑 ☢️_𖣘 -𝐁𝐎𝐓 ⚠️ 𝑻𝑬𝑨𝑴_ ☢️
  * ==========================================================
- * 📦 Version : 5.0.0
+ * 📦 Version : 3.5.0
  * 👑 Permission : Admin Only
- * 💬 Description : Battery Charging Animation + Cinematic Power ON
+ * 💬 Description : Restart bot with battery-style loading
  * ==========================================================
  */
 
@@ -15,10 +15,10 @@ const { exec } = require("child_process");
 
 module.exports.config = {
   name: "restart",
-  version: "5.0.0",
+  version: "3.5.0",
   hasPermssion: 2,
   credits: "Nk Naiem Khan",
-  description: "Restart bot with cinematic battery animation",
+  description: "Restart bot with stylish battery progress bar",
   commandCategory: "system",
   usages: "[restart bot]",
   cooldowns: 5
@@ -27,16 +27,15 @@ module.exports.config = {
 module.exports.run = async ({ api, event }) => {
   const { threadID } = event;
   const time = moment().tz("Asia/Dhaka").format("hh:mm:ss A, DD MMM YYYY");
-  const botName = "Ashraful";
+  const botName = global.config.BOTNAME || "CyberBot";
 
   const startMsg = `
-╔════════════════════════════════╗
-🔋 ${botName} SYSTEM RESTARTING ⚡
-╚════════════════════════════════╝
-
+╔════════════════════════╗
+🔋 ${botName} SYSTEM REBOOTING
+╚════════════════════════╝
 🕒 Time: ${time}
-💬 Status: Charging core modules...
-  `;
+💬 Status: Initializing...
+`;
 
   api.sendMessage(startMsg, threadID, async () => {
     console.clear();
@@ -45,40 +44,34 @@ module.exports.run = async ({ api, event }) => {
     console.log(chalk.green(`🕒 Time: ${time}`));
     console.log(chalk.yellow.bold("============================================\n"));
 
-    // Charging animation (10% ➜ 100%)
-    let totalBars = 10;
-    for (let i = 1; i <= totalBars; i++) {
-      let percent = i * 10;
-      let bar = "■".repeat(i) + "□".repeat(totalBars - i);
-      let text = percent < 100 ? "⚡ Charging..." : "✅ Fully Charged!";
-      let msg = `🔋 ${botName} Restarting...\n[${bar}] ${percent}%\n${text}`;
-
-      console.log(chalk.cyan(`[${bar}] ${percent}% - ${text}`));
-      api.sendMessage(msg, threadID);
-
-      await new Promise(resolve => setTimeout(resolve, 800));
-    }
-
-    // Cinematic Power ON Effect
-    const finalSequence = [
-      "🔌 Power Restored...",
-      "⚙️ System Booting...",
-      "🚀 Activating Core Modules...",
-      "🤖 Welcome Back, " + botName + "!",
-      "✅ Restart Successful!"
+    // Battery loading animation steps
+    const progress = [
+      { p: 10, bar: "■□□□□□□□□□", msg: "Starting..." },
+      { p: 20, bar: "■■□□□□□□□□", msg: "Loading modules..." },
+      { p: 30, bar: "■■■□□□□□□□", msg: "Checking system..." },
+      { p: 40, bar: "■■■■□□□□□□", msg: "Saving session..." },
+      { p: 50, bar: "■■■■■□□□□□", msg: "Optimizing memory..." },
+      { p: 60, bar: "■■■■■■□□□□", msg: "Securing configs..." },
+      { p: 70, bar: "■■■■■■■□□□", msg: "Updating runtime..." },
+      { p: 80, bar: "■■■■■■■■□□", msg: "Encrypting cache..." },
+      { p: 90, bar: "■■■■■■■■■□", msg: "Launching system..." },
+      { p: 100, bar: "■■■■■■■■■■", msg: "✅ Restart Complete!" }
     ];
 
-    for (const line of finalSequence) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log(chalk.greenBright(line));
-      api.sendMessage(line, threadID);
+    // Show progress both in console & messenger
+    for (let i = 0; i < progress.length; i++) {
+      const { p, bar, msg } = progress[i];
+      await new Promise(resolve => setTimeout(resolve, 800));
+      console.log(chalk.cyan(`[${bar}] ${p}% - ${msg}`));
+      api.sendMessage(`⚡ ${botName} Restarting...\n[${bar}] ${p}%\n${msg}`, threadID);
     }
 
-    // Auto Restart
+    // Final message
     setTimeout(() => {
-      api.sendMessage(`🎉 ${botName} is now ONLINE ✅\n🕒 Time: ${time}`, threadID);
-      console.log(chalk.greenBright("\n🎉 BOT FULLY ONLINE & READY TO RUN!\n"));
+      api.sendMessage(`🎉 ${botName} successfully restarted at ${time}`, threadID);
+      console.log(chalk.greenBright("\n✅ BOT RESTARTED SUCCESSFULLY!\n"));
 
+      // Auto restart
       exec("npm start", (error, stdout, stderr) => {
         if (error) {
           console.error(chalk.red(`❌ Restart Failed: ${error.message}`));
@@ -87,8 +80,7 @@ module.exports.run = async ({ api, event }) => {
         if (stderr) console.error(chalk.red(stderr));
         console.log(chalk.green(stdout));
       });
-
       process.exit(1);
-    }, 1500);
+    }, 2000);
   });
 };
