@@ -53,7 +53,7 @@ module.exports.run = async ({ api, event }) => {
     "🔌 Power Restored...",
     "⚙️ System Booting...",
     "🚀 Activating Core Modules...",
-    "🤖 Welcome Back, " + botName + "!",
+    "🤖 I am back again, " + botName + "!",
     "✅ Restart Successful!"
   ];
 
