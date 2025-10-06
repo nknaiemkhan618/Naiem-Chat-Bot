@@ -9,7 +9,7 @@
 Assalamualaikum Everyone!  
 **Welcome to My NAIEM CHAT BOT Fork!**
 
-![Box-shaped Image](https://i.imgur.com/jjbkjbF.jpeg)
+![Box-shaped Image](https://i.imgur.com/1JsZgID.jpeg)
 
 <p align="center" style="animation: glow 2s infinite alternate; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
   <span style="font-size: 24px; font-weight: bold;">NAIEM CHAT BOT</span><br>
