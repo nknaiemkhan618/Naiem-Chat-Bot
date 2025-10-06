@@ -29,50 +29,47 @@ module.exports.run = async ({ api, event }) => {
   const time = moment().tz("Asia/Dhaka").format("hh:mm:ss A, DD MMM YYYY");
   const botName = "Nk Naiem Khan";
 
-  const startMsg = `
+  // সব মেসেজ একসাথে তৈরি করা হচ্ছে
+  let fullMessage = `
 ╔════════════════════════════════╗
 🔋 ${botName} SYSTEM RESTARTING ⚡
 ╚════════════════════════════════╝
 
 🕒 Time: ${time}
 💬 Status: Charging core modules...
-  `;
+`;
 
-  api.sendMessage(startMsg, threadID, async () => {
+  // Charging animation (10% ➜ 100%)
+  let totalBars = 10;
+  for (let i = 1; i <= totalBars; i++) {
+    let percent = i * 10;
+    let bar = "■".repeat(i) + "□".repeat(totalBars - i);
+    let text = percent < 100 ? "⚡ Restarting..." : "✅ Fully Restarted!";
+    fullMessage += `\n[${bar}] ${percent}% - ${text}`;
+  }
+
+  // Cinematic Power ON Effect
+  const finalSequence = [
+    "🔌 Power Restored...",
+    "⚙️ System Booting...",
+    "🚀 Activating Core Modules...",
+    "🤖 Welcome Back, " + botName + "!",
+    "✅ Restart Successful!"
+  ];
+
+  for (const line of finalSequence) {
+    fullMessage += `\n${line}`;
+  }
+
+  // একসাথে মেসেজ সেন্ড
+  api.sendMessage(fullMessage, threadID, () => {
     console.clear();
     console.log(chalk.yellow.bold("============================================"));
     console.log(chalk.cyan.bold(`🚀 ${botName} Restart Command Executed`));
     console.log(chalk.green(`🕒 Time: ${time}`));
     console.log(chalk.yellow.bold("============================================\n"));
 
-    // Charging animation (10% ➜ 100%)
-    let totalBars = 10;
-    for (let i = 1; i <= totalBars; i++) {
-      let percent = i * 10;
-      let bar = "■".repeat(i) + "□".repeat(totalBars - i);
-      let text = percent < 100 ? "⚡ Charging..." : "✅ Fully Charged!";
-      let msg = `🔋 ${botName} Restarting...\n[${bar}] ${percent}%\n${text}`;
-
-      console.log(chalk.cyan(`[${bar}] ${percent}% - ${text}`));
-      api.sendMessage(msg, threadID);
-
-      await new Promise(resolve => setTimeout(resolve, 800));
-    }
-
-    // Cinematic Power ON Effect
-    const finalSequence = [
-      "🔌 Power Restored...",
-      "⚙️ System Booting...",
-      "🚀 Activating Core Modules...",
-      "🤖 Welcome Back, " + botName + "!",
-      "✅ Restart Successful!"
-    ];
-
-    for (const line of finalSequence) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log(chalk.greenBright(line));
-      api.sendMessage(line, threadID);
-    }
+    console.log(chalk.greenBright(fullMessage));
 
     // Auto Restart
     setTimeout(() => {
