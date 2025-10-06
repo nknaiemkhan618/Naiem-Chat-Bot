@@ -36,7 +36,7 @@ module.exports.run = async ({ api, event }) => {
 ╚════════════════════════════════╝
 
 🕒 Time: ${time}
-💬 Status: Charging core modules...
+💬 Status: Restarting core modules...
 `;
 
   // Charging animation (10% ➜ 100%)
