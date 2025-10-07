@@ -30,7 +30,7 @@ module.exports.handleEvent = async function({
   if (null == m.attachment[0]) return a.sendMessage(`═════════════════════\n @𝐍𝐤 𝐍𝐚𝐢𝐞𝐦 𝐊𝐡𝐚𝐧\n═════════════════════\n\nকই গো বছ দেখুন🥺 ,@${e} এই লুচ্ছায় মাত্র👉 \"${m.msgBody}\"👈এই টেক্সট টা রিমুভ দিছে😁\n\n═════════════════════\n 𝗕𝗼𝘁 𝗢𝘄𝗻𝗲𝗿 𝐍𝐊 𝐍𝐀𝐈𝐄𝐌 𝐊𝐇𝐀𝐍\n═════════════════════`, u); {
    let t = 0,
     s = {
-     body: `@${e}এই হালায় এই মাত্র এইডা রিমুভ দিছে🍁😒 সবাই দেখে নেও🐸😁${""!=m.msgBody?`\n\nContent: ${m.msgBody}`:""}`,
+     body: `@${e}এই হালায় এই মাত্র এইডা রিমুভ দিছে🍁😒 বছ দেখে নেও🐸😁${""!=m.msgBody?`\n\nContent: ${m.msgBody}`:""}`,
      attachment: [],
      mentions: {
       tag: e,
