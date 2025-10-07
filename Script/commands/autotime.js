@@ -7,7 +7,7 @@ module.exports.config = {
     version: '10.3.0',
     hasPermssion: 0,
     credits: 'NK NAIEM KHAN',
-    description: 'Automatically sends deep love quotes with feelings and photo every hour (BD Time)',
+    description: 'Automatically sends deep love quotes with feelings every hour (BD Time)',
     commandCategory: 'group messenger',
     usages: '[]',
     cooldowns: 3
@@ -43,7 +43,7 @@ const quotes = [
 ];
 
 // -----------------------------
-// স্পেশাল সংলাপ (Feelings)
+// স্পেশাল সংলাপ
 const feelings = [
     "তুমি থাকলে এখন হয়তো রাতের তারাগুলো দেখতাম। 🖤",
     "তুমি থাকলে গল্প করতাম। 🌙",
@@ -60,23 +60,15 @@ const feelings = [
     "তুমি থাকলে দুপুরের খাবার শেয়ার করতাম। 💭",
     "তুমি থাকলে ক্লান্ত দুপুরটা হালকা হতো। 🖤",
     "তুমি থাকলে রোদে হেঁটে যেতাম। 🌙",
-    "তুমি থাকলে চা খেতাম। ☕",
+    "তুমি থাকলে একসাথে বসে চা খেতাম। ☕",
     "তুমি থাকলে সময়টা মিষ্টি হতো। 🥀",
-    "তুমি থাকলে হাঁটতে হাঁটতে গল্প করতাম। 💭",
-    "তুমি থাকলে রাতের হালকা হাওয়া বইছে, কিছু মুহূর্ত কাটাচ্ছি। 🖤",
+    "তুমি থাকলে একসাথে হাত ধরে হাঁটতে হাঁটতে গল্প করতাম। 💭",
+    "তুমি ছাড়া রাতের হালকা হাওয়া বইছে, কিছু মুহূর্ত কাটাচ্ছি। 😅",
     "তুমি থাকলে একসাথে গান শুনতাম। 🕯️",
     "তুমি থাকলে রাতের আড্ডা দিতাম। 💔",
     "তুমি থাকলে রাতের চাঁদের নিচে দাঁড়াতাম। 🌙",
     "তুমি থাকলে গল্পের শেষটা লিখতাম। 🖤",
     "তুমি থাকলে দিনের শেষ প্রার্থনা একসাথে করতাম। 🥀"
-];
-
-// -----------------------------
-// ছবি লিঙ্ক
-const photoLinks = [
-    "https://i.imgur.com/y77XCpB.jpeg", // ছবির লিঙ্ক ১
-    "https://i.imgur.com/61f5u5E.jpeg", // ছবির লিঙ্ক ২
-    "https://i.imgur.com/6ftjvgV.jpeg"  // ছবির লিঙ্ক ৩
 ];
 
 // -----------------------------
@@ -87,10 +79,8 @@ const messages = Array.from({ length: 24 }, (_, i) => ({
         const date = moment(now).tz("Asia/Dhaka");
         const quote = quotes[i % quotes.length];
         const feeling = feelings[i % feelings.length];
-        const photo = photoLinks[i % photoLinks.length];
 
-        return {
-            body: 
+        return (
 `╔═❖═❖═❖═❖═❖═❖═╗  
  ⏰ 𝗧𝗜𝗠𝗘 & 𝗗𝗔𝗧𝗘 ⏰   
  ╚═❖═❖═❖═❖═❖═❖═╝
@@ -109,13 +99,11 @@ ${quote}
 ${feeling}
 ╔════════════════════════════╗
 ║🖤 With Love,  🖤 Ashraful boss║
-╚════════════════════════════╝`,
-            attachment: [photo]
-        };
+╚════════════════════════════╝`
+        );
     }
 }));
 
-// -----------------------------
 module.exports.onLoad = ({ api }) => {
     console.log(chalk.bold.hex("#00c300")("============ AUTOSENT COMMAND LOADED (BD TIME) ============"));
 
