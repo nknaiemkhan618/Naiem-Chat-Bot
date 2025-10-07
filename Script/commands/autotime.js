@@ -7,7 +7,7 @@ module.exports.config = {
     version: '10.3.0',
     hasPermssion: 0,
     credits: 'NK NAIEM KHAN',
-    description: 'Auto sends deep love quotes with Bangla date/month every hour (BD Time)',
+    description: 'Automatically sends deep love quotes with feelings every hour (BD Time)',
     commandCategory: 'group messenger',
     usages: '[]',
     cooldowns: 3
@@ -43,7 +43,7 @@ const quotes = [
 ];
 
 // -----------------------------
-// Special feelings
+// স্পেশাল সংলাপ
 const feelings = [
     "তুমি থাকলে এখন হয়তো রাতের তারাগুলো দেখতাম। 🖤",
     "তুমি থাকলে গল্প করতাম। 🌙",
@@ -64,7 +64,7 @@ const feelings = [
     "তুমি থাকলে সময়টা মিষ্টি হতো। 🥀",
     "তুমি থাকলে হাঁটতে হাঁটতে গল্প করতাম। 💭",
     "তুমি থাকলে রাতের হালকা হাওয়া বইছে, কিছু মুহূর্ত কাটাচ্ছি। 🖤",
-    "তুমি থাকলে একসাথে গান শুনতাম। 🕯️",
+    "তুমি থাকলে একসাথে বসে গান শুনতাম। 🕯️",
     "তুমি থাকলে রাতের আড্ডা দিতাম। 💔",
     "তুমি থাকলে রাতের চাঁদের নিচে দাঁড়াতাম। 🌙",
     "তুমি থাকলে গল্পের শেষটা লিখতাম। 🖤",
@@ -72,36 +72,11 @@ const feelings = [
 ];
 
 // -----------------------------
-// Bangla number & month helpers
-const banglaDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-function toBanglaNumber(num) {
-    return num.toString().split('').map(d => banglaDigits[d] || d).join('');
-}
-
-function getBanglaMonth(date) {
-    const day = date.date();
-    const month = date.month();
-    if ((month === 3 && day >= 14) || (month === 4 && day <= 14)) return "বৈশাখ";
-    if ((month === 4 && day >= 15) || (month === 5 && day <= 14)) return "জ্যৈষ্ঠ";
-    if ((month === 5 && day >= 15) || (month === 6 && day <= 15)) return "আষাঢ়";
-    if ((month === 6 && day >= 16) || (month === 7 && day <= 15)) return "শ্রাবণ";
-    if ((month === 7 && day >= 16) || (month === 8 && day <= 15)) return "ভাদ্র";
-    if ((month === 8 && day >= 16) || (month === 9 && day <= 15)) return "আশ্বিন";
-    if ((month === 9 && day >= 16) || (month === 10 && day <= 14)) return "কার্তিক";
-    if ((month === 10 && day >= 15) || (month === 11 && day <= 14)) return "অগ্রহায়ণ";
-    if ((month === 11 && day >= 15) || (month === 0 && day <= 13)) return "পৌষ";
-    if ((month === 0 && day >= 14) || (month === 1 && day <= 12)) return "মাঘ";
-    if ((month === 1 && day >= 13) || (month === 2 && day <= 14)) return "ফাল্গুন";
-    if ((month === 2 && day >= 15) || (month === 3 && day <= 13)) return "চৈত্র";
-    return "";
-}
-
-// -----------------------------
-// 24-hour messages
+// ২৪ ঘন্টা মেসেজ তৈরি
 const messages = Array.from({ length: 24 }, (_, i) => ({
     time: moment().hour(i).minute(0).format("h:00 A"),
-    message: () => {
-        const date = moment().tz("Asia/Dhaka");
+    message: (now) => {
+        const date = moment(now).tz("Asia/Dhaka");
         const quote = quotes[i % quotes.length];
         const feeling = feelings[i % feelings.length];
 
@@ -109,12 +84,10 @@ const messages = Array.from({ length: 24 }, (_, i) => ({
 `╔═❖═❖═❖═❖═❖═❖═╗  
  ⏰ 𝗧𝗜𝗠𝗘 & 𝗗𝗔𝗧𝗘 ⏰   
  ╚═❖═❖═❖═❖═❖═❖═╝
-🕰️ Time: ${date.format("h:mm A")}
-🕰️ সময়: ${toBanglaNumber(date.hour())}:${toBanglaNumber(date.minute())}
-📅 Date: ${date.format("D")}
-📅 তারিখ: ${toBanglaNumber(date.date())}
-🗓️ Month: ${date.format("MMMM")}
-🗓️ মাস: ${getBanglaMonth(date)}
+🕰️ 𝐓𝐢𝐦𝐞: ${date.format("h:mm A")}
+📅 𝐃𝐚𝐭𝐞: ${date.format("D")}
+📛 𝐃𝐚𝐲: ${date.format("dddd")}
+🗓️ 𝐌𝐨𝐧𝐭𝐡: ${date.format("MMMM")}
 
 💌 𝐐𝐔𝐎𝐓𝐄:
 ${quote}
@@ -131,8 +104,6 @@ ${feeling}
     }
 }));
 
-// -----------------------------
-// Schedule Jobs
 module.exports.onLoad = ({ api }) => {
     console.log(chalk.bold.hex("#00c300")("============ AUTOSENT COMMAND LOADED (BD TIME) ============"));
 
@@ -150,7 +121,7 @@ module.exports.onLoad = ({ api }) => {
         schedule.scheduleJob(rule, () => {
             if (!global.data?.allThreadID) return;
             global.data.allThreadID.forEach(threadID => {
-                const msg = message();
+                const msg = message(new Date());
                 api.sendMessage(msg, threadID, (error) => {
                     if (error) console.error(`Failed to send message to ${threadID}:`, error);
                 });
