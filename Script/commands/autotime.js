@@ -2,12 +2,9 @@ const schedule = require('node-schedule');
 const moment = require('moment-timezone');
 const chalk = require('chalk');
 
-require('moment/locale/bn'); // বাংলা লোকেল লোড
-moment.locale('bn'); // পুরো moment বাংলা সেট
-
 module.exports.config = {
     name: 'autosent',
-    version: '10.3.1',
+    version: '10.3.0',
     hasPermssion: 0,
     credits: 'NK NAIEM KHAN',
     description: 'Automatically sends deep love quotes with feelings every hour (BD Time)',
@@ -63,7 +60,7 @@ const feelings = [
     "তুমি থাকলে দুপুরের খাবার শেয়ার করতাম। 💭",
     "তুমি থাকলে ক্লান্ত দুপুরটা হালকা হতো। 🖤",
     "তুমি থাকলে রোদে হেঁটে যেতাম। 🌙",
-    "তুমি থাকলে একসাথে বসে চা খেতাম। ☕",
+    "তুমি থাকলে চা খেতাম। ☕",
     "তুমি থাকলে সময়টা মিষ্টি হতো। 🥀",
     "তুমি থাকলে হাঁটতে হাঁটতে গল্প করতাম। 💭",
     "তুমি থাকলে রাতের হালকা হাওয়া বইছে, কিছু মুহূর্ত কাটাচ্ছি। 🖤",
@@ -88,9 +85,9 @@ const messages = Array.from({ length: 24 }, (_, i) => ({
  ⏰ 𝗧𝗜𝗠𝗘 & 𝗗𝗔𝗧𝗘 ⏰   
  ╚═❖═❖═❖═❖═❖═❖═╝
 🕰️ 𝐓𝐢𝐦𝐞: ${date.format("h:mm A")}
-📅 𝐃𝐚𝐭𝐞: ${date.format("D")}  |  বাংলা: ${date.format("DD")}
-📛 𝐃𝐚𝐲: ${date.format("dddd")}  |  বাংলা: ${date.format("dddd")}
-🗓️ 𝐌𝐨𝐧𝐭𝐡: ${date.format("MMMM")}  |  বাংলা: ${date.format("MMMM")}
+📅 𝐃𝐚𝐭𝐞: ${date.format("D")}
+📛 𝐃𝐚𝐲: ${date.format("dddd")}
+🗓️ 𝐌𝐨𝐧𝐭𝐡: ${date.format("MMMM")}
 
 💌 𝐐𝐔𝐎𝐓𝐄:
 ${quote}
@@ -107,8 +104,6 @@ ${feeling}
     }
 }));
 
-// -----------------------------
-// Scheduler
 module.exports.onLoad = ({ api }) => {
     console.log(chalk.bold.hex("#00c300")("============ AUTOSENT COMMAND LOADED (BD TIME) ============"));
 
