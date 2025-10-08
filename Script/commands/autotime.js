@@ -1,6 +1,5 @@
 const schedule = require('node-schedule');
 const moment = require('moment-timezone');
-require('moment-hijri'); // হিজরী তারিখের জন্য
 const chalk = require('chalk');
 
 // বাংলা মাস
@@ -21,48 +20,12 @@ const banglaDays = {
   Saturday: "শনিবার"
 };
 
-// হিজরী মাসের আরবী নাম
-const hijriMonthsArabic = [
-  "مُحَرَّم", "صَفَر", "رَبِيع ٱلْأَوَّل", "رَبِيع ٱلثَّانِي",
-  "جُمَادَىٰ ٱلأُولَى", "جُمَادَىٰ ٱلثَّانِيَة", "رَجَب", "شَعْبَان",
-  "رَمَضَان", "شَوَّال", "ذُو القَعْدَة", "ذُو الحِجَّة"
-];
-
-// হিজরী সপ্তাহের দিন আরবীতে
-const hijriDaysArabic = {
-  Sunday: "الأحد",
-  Monday: "الاثنين",
-  Tuesday: "الثلاثاء",
-  Wednesday: "الأربعاء",
-  Thursday: "الخميس",
-  Friday: "الجمعة",
-  Saturday: "السبت"
-};
-
-// সংখ্যা বাংলা
-const banglaDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-// সংখ্যা Arabic
-const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-
-function toBanglaNumber(num) {
-  return num.toString().split('').map(d => banglaDigits[parseInt(d)]).join('');
-}
-
-function toArabicNumber(num) {
-  return num.toString().split('').map(d => arabicDigits[parseInt(d)]).join('');
-}
-
-// AM/PM Arabic
-function toArabicAMPM(ampm){
-  return ampm === 'AM' ? 'ص' : 'م';
-}
-
 module.exports.config = {
   name: 'autosent',
-  version: '12.7.0',
+  version: '12.3.0',
   hasPermssion: 0,
   credits: 'âßhråfùl Îßlām',
-  description: 'Hourly auto message with English, Bangla & Arabic Date/Time',
+  description: 'Hourly auto message with BD Time & quotes design',
   commandCategory: 'group messenger',
   usages: '[]',
   cooldowns: 3
@@ -70,7 +33,7 @@ module.exports.config = {
 
 // 💔 গভীর উক্তি (Quotes)
 const quotes = [  
-   "💔 ভালোবাসা একসময় ছিল জীবনের সবচেয়ে সুন্দর শব্দ,\nএখন সেটা কষ্টের আরেকটা নাম।\nযে মানুষটাকে নিজের সুখ ভেবে বেঁচেছিলাম,\nসে-ই আজ আমার কষ্টের কারণ।\n🌧️ সময় বদলায়, কিন্তু কিছু স্মৃতি কখনো পুরোনো হয় না।\n🖤 আজও চোখ বন্ধ করলে তার মুখটাই দেখি।",  
+    "💔 ভালোবাসা একসময় ছিল জীবনের সবচেয়ে সুন্দর শব্দ,\nএখন সেটা কষ্টের আরেকটা নাম।\nযে মানুষটাকে নিজের সুখ ভেবে বেঁচেছিলাম,\nসে-ই আজ আমার কষ্টের কারণ।\n🌧️ সময় বদলায়, কিন্তু কিছু স্মৃতি কখনো পুরোনো হয় না।\n🖤 আজও চোখ বন্ধ করলে তার মুখটাই দেখি।",  
     "🌧️ একসময় তার মেসেজে হাসতাম, এখন সেই নাম দেখলেই বুকটা ভারী লাগে।\nযে বলেছিলো ‘চিরকাল থাকবে’, সে আজ অন্য কারো হাসির কারণ।\n💭 হয়তো ভালোবাসা শেষ হয়নি, শেষ হয়ে গেছে আমার ভাগ্য।\n🥀 আমি এখন শুধু অভিমান জমাই, ভালোবাসা না।",  
     "🕯️ কাউকে ভুলে যাওয়া মানে স্মৃতিকে মুছে ফেলা নয়,\nবরং প্রতিদিন সেই স্মৃতির সাথে লড়াই করা।\n💔 আমি এখনো মনে রাখি তার বলা প্রতিটা কথা,\nকিন্তু সে হয়তো ভুলেই গেছে আমি ছিলাম কখনো।\n🌙 ভালোবাসা ছিল সত্যি, মানুষটা ছিল মিথ্যে।",  
     "💭 একসময় প্রতিদিন কথা হতো, হাসি থাকতো,\nএখন শুধু নীরবতা আর কষ্ট জমে আছে হৃদয়ে।\n🥀 যে মানুষটাকে নিজের সব বলেছিলাম,\nসে-ই আজ আমার নীরবতার কারণ।\n💔 ভালোবাসা হারিয়ে গেলে জীবনটাও রঙ হারায়।",  
@@ -94,73 +57,48 @@ const quotes = [
     "🌧️ একসময় আমার প্রতিদিন শুরু হতো তার শুভ সকাল দিয়ে,\nএখন সেই সকাল আসে নীরবে, একা।\n💭 আমি শুধু ফোনে তাকিয়ে থাকি, সে কিছু পাঠাবে ভেবে।\n🖤 কিন্তু জানি, এখন সে অন্য কারো 'প্রিয়'।",  
     "🥀 যে মানুষটাকে ভালোবেসে নিজেকে হারিয়েছিলাম,\nসে এখন হাসে আমার ব্যথার গল্পে।\n💔 আমি এখনো হাসি, শুধু সে যেন না বুঝে আমি কাঁদি।\n🌙 ভালোবাসা নয়, এ যেন অভিশাপ হয়ে গেছে জীবনে।",  
     "💔 আমি চাইনি সম্পর্ক শেষ হোক,\nকিন্তু একা লড়তে লড়তে ক্লান্ত হয়ে গেছি।\n🌧️ আমি ভালোবেসেছিলাম সত্যি করে,\nসে ভালোবেসেছিলো সময় কাটানোর জন্য।\n🥀 এখন শুধু স্মৃতি বাকি, বাকি আমি।",
+// ... সমস্ত বাকি উক্তি একইভাবে এখানে বসবে
 ];
 
 module.exports.onLoad = ({ api }) => {
-  console.log(chalk.bold.hex("#00ff99")("🌸 Auto Quote Message (BD TIME + English, Bangla, Arabic) Started 🌸"));
+  console.log(chalk.bold.hex("#00ff99")("🌸 Auto Quote Message (BD TIME) Started 🌸"));
 
   let index = 0;
+
   const rule = new schedule.RecurrenceRule();
   rule.tz = 'Asia/Dhaka';
-  rule.minute = 0; // প্রতি ঘন্টায় 0 মিনিটে পাঠাবে
+  rule.minute = 0;
 
   schedule.scheduleJob(rule, () => {
     const now = moment().tz('Asia/Dhaka');
-
-    // --- English Date & Time ---
-    const englishDay = now.format('dddd');
-    const englishMonth = now.format('MMMM');
+    const engDay = now.format('dddd');
+    const engMonth = now.format('MMMM');
     const engDate = now.format('DD');
     const engYear = now.format('YYYY');
-    const engTime = now.format('hh:mm A');
+    const time = now.format('hh:mm A');
 
-    // --- Bangla Date & Time ---
-    const banglaDay = banglaDays[englishDay];
+    const banglaDay = banglaDays[engDay];
     const banglaMonth = banglaMonths[now.month()];
-    const banglaDate = toBanglaNumber(now.format('DD'));
-    const banglaYear = toBanglaNumber(parseInt(now.format('YYYY')) - 593);
-    const banglaHour = toBanglaNumber(now.format('hh'));
-    const banglaMinute = toBanglaNumber(now.format('mm'));
-    const banglaAMPM = now.format('A') === 'AM' ? 'পূর্বাহ্ন' : 'অপরাহ্ন';
-    const banglaTime = `${banglaHour}:${banglaMinute} ${banglaAMPM}`;
-
-    // --- Hijri/Arabic Date & Time ---
-    const hijriDate = toArabicNumber(now.iDate());
-    const hijriMonthArabic = hijriMonthsArabic[now.iMonth()];
-    const hijriYearArabic = toArabicNumber(now.iYear());
-    const hijriDayArabic = hijriDaysArabic[englishDay];
-    const hijriHour = toArabicNumber(now.format('hh'));
-    const hijriMinute = toArabicNumber(now.format('mm'));
-    const hijriAMPM = toArabicAMPM(now.format('A'));
-    const hijriTime = `${hijriHour}:${hijriMinute} ${hijriAMPM}`;
+    const banglaYear = (parseInt(engYear) - 593).toString();
 
     const msg = `
 ╭╼╾╼🌸╾╼╾╮  
-🌺 𝐁𝐃~𝐓𝐈𝐌𝐄 🌺  
+🌺𝐁𝐃~𝐓𝐈𝐌𝐄🌺  
 ╰╼╾╼🌸╾╼╾╯  
 
-🕒 Time:
-English: ${engTime}
-বাংলা: ${banglaTime}
-عربيك: ${hijriTime}
+🕒 সময়: ${time}
 
 📅 English Date:
 Date: ${engDate}
-Month: ${englishMonth}
+Month: ${engMonth}
 Year: ${engYear}
-Day: ${englishDay}
+Day: ${engDay}
 
 🗓️ বাংলা তারিখ:
-তারিখ: ${banglaDate}
+তারিখ: ${engDate}
 মাস: ${banglaMonth}
 বছর: ${banglaYear}
 বার: ${banglaDay}
-
-🕌 হিজরী তারিখ (Arabic):
-تاريخ: ${hijriDate}
-شهر: ${hijriMonthArabic}
-سنة: ${hijriYearArabic}
-يوم: ${hijriDayArabic}
 
 🌍 টাইমজোন: Asia/Dhaka  
 
@@ -180,6 +118,7 @@ ${quotes[index]}
     });
 
     console.log(chalk.hex("#00FFFF")(`✅ Sent quote ${index + 1}`));
+
     index = (index + 1) % quotes.length;
   });
 };
