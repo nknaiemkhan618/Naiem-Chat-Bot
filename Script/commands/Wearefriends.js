@@ -11,7 +11,7 @@ module.exports.config = {
 
 // === এখানে আপনার লিংক সেট করুন ===
 const fbGroup = "👉 আমাদের Facebook Page: https://www.facebook.com/share/p/15swwzNxDm/";
-const fbPage = "👉 আমাদের Facebook Group: https://www.facebook.com/profile.php?id=61580237348388";
+const fbPage = "👉 আমাদের Face://www.facebook.com/profile.php?id=61580237348388";
 const tiktok = "👉 আমাদের TikTok ID: https://vt.tiktok.com/ZSDcGf8KH/";
 
 // === কাস্টমাইজ মেসেজ ===
