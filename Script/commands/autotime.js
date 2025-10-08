@@ -2,13 +2,6 @@ const schedule = require('node-schedule');
 const moment = require('moment-timezone');
 const chalk = require('chalk');
 
-// বাংলা মাস
-const banglaMonths = [
-  "বৈশাখ", "জ্যৈষ্ঠ", "আষাঢ়", "শ্রাবণ",
-  "ভাদ্র", "আশ্বিন", "কার্তিক", "অগ্রহায়ণ",
-  "পৌষ", "মাঘ", "ফাল্গুন", "চৈত্র"
-];
-
 // বাংলা বার
 const banglaDays = {
   Sunday: "রবিবার",
@@ -22,10 +15,10 @@ const banglaDays = {
 
 module.exports.config = {
   name: 'autosent',
-  version: '12.3.0',
+  version: '12.4.0',
   hasPermssion: 0,
   credits: 'âßhråfùl Îßlām',
-  description: 'Hourly auto message with BD Time & quotes design',
+  description: 'Hourly auto message with BD Time, quotes & feelings (Full Design)',
   commandCategory: 'group messenger',
   usages: '[]',
   cooldowns: 3
@@ -56,18 +49,86 @@ const quotes = [
     "💔 সম্পর্কটা শেষ হয়েছে, কিন্তু অনুভূতিটা নয়।\nআজও রাত জেগে মনে হয়, সে এখন কেমন আছে।\n🥀 আমি হয়তো ভুলিনি, কিন্তু ভুলে যাওয়ার ভান করি।\n🌙 কারণ কেউ কেয়ার করে না এখন আর।",  
     "🌧️ একসময় আমার প্রতিদিন শুরু হতো তার শুভ সকাল দিয়ে,\nএখন সেই সকাল আসে নীরবে, একা।\n💭 আমি শুধু ফোনে তাকিয়ে থাকি, সে কিছু পাঠাবে ভেবে।\n🖤 কিন্তু জানি, এখন সে অন্য কারো 'প্রিয়'।",  
     "🥀 যে মানুষটাকে ভালোবেসে নিজেকে হারিয়েছিলাম,\nসে এখন হাসে আমার ব্যথার গল্পে।\n💔 আমি এখনো হাসি, শুধু সে যেন না বুঝে আমি কাঁদি।\n🌙 ভালোবাসা নয়, এ যেন অভিশাপ হয়ে গেছে জীবনে।",  
-    "💔 আমি চাইনি সম্পর্ক শেষ হোক,\nকিন্তু একা লড়তে লড়তে ক্লান্ত হয়ে গেছি।\n🌧️ আমি ভালোবেসেছিলাম সত্যি করে,\nসে ভালোবেসেছিলো সময় কাটানোর জন্য।\n🥀 এখন শুধু স্মৃতি বাকি, বাকি আমি।",
-// ... সমস্ত বাকি উক্তি একইভাবে এখানে বসবে
+    "💔 আমি চাইনি সম্পর্ক শেষ হোক,\nকিন্তু একা লড়তে লড়তে ক্লান্ত হয়ে গেছি।\n🌧️ আমি ভালোবেসেছিলাম সত্যি করে,\nসে ভালোবেসেছিলো সময় কাটানোর জন্য।\n🥀 এখন শুধু স্মৃতি বাকি, বাকি আমি।",  
 ];
+
+// -----------------------------
+// স্পেশাল সংলাপ
+const feelings = [
+"তুমি থাকলে এখন হয়তো একসাথে বসে রাতের তারাগুলো দেখতাম। 🖤",
+"তুমি থাকলে এখন দুষ্টু মিষ্টি গল্প করতাম। 🌙",
+"তুমি থাকলে এই সময়টা খুব আনন্দে যেতো না। 🖤",
+"তুমি থাকলে হয়তো গান লিখতাম। 🕯️",
+"তুমি থাকলে ভোরে একসাথে বসতাম। 🌧️",
+"তুমি থাকলে সূর্যোদয় দেখতাম। ☀️",
+"তুমি থাকলে সকালটা অন্যরকম হতো। 🖤",
+"তুমি থাকলে নাস্তা করতাম। 🥀",
+"তুমি থাকলে কফির কাপের সাথে হাসি ভাগ করতাম। ☕",
+"তুমি থাকলে কাজের ব্যস্ততাতেও হাসি থাকত। 💔",
+"তুমি থাকলে আজকের দিনটা আলাদা হতো। 🖤",
+"তুমি থাকলে একসাথে হাঁটতাম। 🥀",
+"তুমি থাকলে দুপুরের খাবার শেয়ার করতাম। 💭",
+"তুমি থাকলে ক্লান্ত দুপুরটা হালকা হতো। 🖤",
+"তুমি থাকলে রোদে একসাথে হাত ধরে হেঁটে যেতাম। 🌙",
+"তুমি থাকলে এখন একসাথে বসে চা খেতাম। ☕",
+"তুমি থাকলে সময়টা মিষ্টি হতো। 🥀",
+"তুমি থাকলে হাঁটতে হাঁটতে গল্প করতাম। 💭",
+"তুমি থাকলে রাতের হালকা হাওয়া বইছে, কিছু মুহূর্ত কাটাচ্ছি। 🖤",
+"তুমি থাকলে একসাথে গান শুনতাম। 🕯️",
+"তুমি থাকলে রাতের আড্ডাটা অনেক জমে উঠতো দিতাম। 💔",
+"তুমি থাকলে রাতের চাঁদের নিচে দাঁড়াতাম। 🌙",
+"তুমি থাকলে গল্পের শেষটা লিখতাম। 🖤",
+"তুমি থাকলে দিনের শেষ প্রার্থনা একসাথে করতাম। 🥀"
+];
+
+// বাংলা তারিখের হিসাব (ইংরেজি থেকে)
+function getBanglaDate(now) {
+  const banglaMonths = [
+    "বৈশাখ", "জ্যৈষ্ঠ", "আষাঢ়", "শ্রাবণ",
+    "ভাদ্র", "আশ্বিন", "কার্তিক", "অগ্রহায়ণ",
+    "পৌষ", "মাঘ", "ফাল্গুন", "চৈত্র"
+  ];
+
+  const bdYearOffset = 593; // বাংলা সন
+  let banglaYear = now.year() - bdYearOffset;
+
+  // বাংলা বছরের শুরু: 14 এপ্রিল থেকে
+  let dayOfYear = now.dayOfYear() - 103;
+  if (dayOfYear <= 0) {
+    dayOfYear += 365;
+    banglaYear -= 1;
+  }
+
+  const banglaMonthDays = [31,31,31,31,30,30,30,30,30,30,29,30]; // মাসের দিন সংখ্যা
+  let remainingDays = dayOfYear;
+  let banglaMonthIndex, banglaDate;
+
+  for (let i = 0; i < banglaMonths.length; i++) {
+    if (remainingDays <= banglaMonthDays[i]) {
+      banglaMonthIndex = i;
+      banglaDate = remainingDays;
+      break;
+    } else {
+      remainingDays -= banglaMonthDays[i];
+    }
+  }
+
+  return {
+    date: banglaDate,
+    month: banglaMonths[banglaMonthIndex],
+    year: banglaYear
+  };
+}
 
 module.exports.onLoad = ({ api }) => {
   console.log(chalk.bold.hex("#00ff99")("🌸 Auto Quote Message (BD TIME) Started 🌸"));
 
-  let index = 0;
+  let indexQuote = 0;
+  let indexFeeling = 0;
 
   const rule = new schedule.RecurrenceRule();
   rule.tz = 'Asia/Dhaka';
-  rule.minute = 0;
+  rule.minute = 0; // প্রতি ঘন্টায় ০ মিনিটে চালানো
 
   schedule.scheduleJob(rule, () => {
     const now = moment().tz('Asia/Dhaka');
@@ -77,35 +138,45 @@ module.exports.onLoad = ({ api }) => {
     const engYear = now.format('YYYY');
     const time = now.format('hh:mm A');
 
+    const bangla = getBanglaDate(now);
     const banglaDay = banglaDays[engDay];
-    const banglaMonth = banglaMonths[now.month()];
-    const banglaYear = (parseInt(engYear) - 593).toString();
 
+    // ক্রমানুসারে ফিলিংস
+    const feeling = feelings[indexFeeling];
+    
     const msg = `
-╭╼╾╼🌸╾╼╾╮  
-🌺𝐁𝐃~𝐓𝐈𝐌𝐄🌺  
-╰╼╾╼🌸╾╼╾╯  
+╔═❖═❖═❖═❖═❖═❖═╗  
+ ⏰ 𝗧𝗜𝗠𝗘 & 𝗗𝗔𝗧𝗘 ⏰   
+╚═❖═❖═❖═❖═❖═❖═╝
 
-🕒 সময়: ${time}
+🕰️ 𝐓𝐢𝐦𝐞: ${time}
+📅 𝐃𝐚𝐭𝐞: ${engDate}
+🗓️ 𝐌𝐨𝐧𝐭𝐡: ${engMonth}
+📛 𝐃𝐚𝐲: ${engDay}
+🗓️ 𝐘𝐞𝐚𝐫: ${engYear}
 
-📅 English Date:
-Date: ${engDate}
-Month: ${engMonth}
-Year: ${engYear}
-Day: ${engDay}
+🕰️ সময়: ${time}
+📅 তারিখ: ${bangla.date}
+🗓️ মাস: ${bangla.month}
+📛 বার: ${banglaDay}
+🗓️ খ্রিষ্টাব্দ: ${bangla.year}
 
-🗓️ বাংলা তারিখ:
-তারিখ: ${engDate}
-মাস: ${banglaMonth}
-বছর: ${banglaYear}
-বার: ${banglaDay}
+═════════════════════
+    💬 না বলা কিছু কথা 
+═════════════════════
 
-🌍 টাইমজোন: Asia/Dhaka  
+═════════════════════
+${quotes[indexQuote]}
+═════════════════════
 
-━━━━━━━━━━━━━━━
-💬 উক্তিঃ  
-${quotes[index]}
-━━━━━━━━━━━━━━━
+╔════════════════════════════╗
+║💖 Âßhråfùl Boos-এর মনের অনুভূতি💖 ║
+╚════════════════════════════╝
+💭 𝐒𝐏𝐄𝐂𝐈𝐀𝐋 𝐅𝐄𝐄𝐋𝐈𝐍𝐆:
+${feeling}
+╔════════════════════════════╗
+║🖤 With Love,  🖤 Âßhråfùl Boss. ║
+╚════════════════════════════╝
 
 𝐂𝐫𝐞𝐚𝐭𝐨𝐫 ━➢ âßhråfùl Îßlām
 `;
@@ -117,9 +188,11 @@ ${quotes[index]}
       });
     });
 
-    console.log(chalk.hex("#00FFFF")(`✅ Sent quote ${index + 1}`));
+    console.log(chalk.hex("#00FFFF")(`✅ Sent quote ${indexQuote + 1} with feeling ${indexFeeling + 1}`));
 
-    index = (index + 1) % quotes.length;
+    // ক্রমানুসারে ইনডেক্স বাড়ানো
+    indexQuote = (indexQuote + 1) % quotes.length;
+    indexFeeling = (indexFeeling + 1) % feelings.length;
   });
 };
 
