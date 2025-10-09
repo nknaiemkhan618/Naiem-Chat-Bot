@@ -13,7 +13,7 @@ module.exports = {
     credits: "dipto", //fixed by Ullash 
     countDown: 5,
     hasPermssion: 0,
-    description: "Download video, audio, and info from YouTube",
+    description: "Downd video, audio, and info from YouTube",
     category: "media",
     commandCategory: "media",
     usePrefix: true,
