@@ -91,7 +91,7 @@ function getBanglaDate(now) {
   const bdYearOffset = 593;
   let banglaYear = now.year() - bdYearOffset;
 
-  let dayOfYear = now.dayOfYear() - 103;
+  let dayOfYear = now.dayOfYear() - 104;
   if (dayOfYear <= 0) {
     dayOfYear += now.isLeapYear() ? 366 : 365;
     banglaYear -= 1;
