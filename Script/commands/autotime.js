@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // বাংলা বার
 const banglaDays = {
-  Sunday: "রবিবার",
+  Sunday: "",
   Monday: "সোমবার",
   Tuesday: "মঙ্গলবার",
   Wednesday: "বুধবার",
