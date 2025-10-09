@@ -22,7 +22,7 @@ module.exports.run = async function({ api, event }) {
 ┌───────────────⭓
 │ 𝗢𝗪𝗡𝗘𝗥 𝗗𝗘𝗧𝗔𝗜𝗟𝗦
 ├───────────────
-│ 👤 𝐍𝐚𝐦𝐞 : 𝐍𝐤 𝐍𝐚𝐢𝐞𝐦 𝐊𝐡𝐚𝐧
+│ 👤 𝐍𝐚𝐦𝐞 : 𝐀𝐬𝐡𝐫𝐚𝐟𝐮𝐥 𝐈𝐬𝐥𝐚𝐦
 │ 🚹 𝐆𝐞𝐧𝐝𝐞𝐫 : 𝐌𝐚𝐥𝐞
 │ ❤️ 𝐑𝐞𝐥𝐚𝐭𝐢𝐨𝐧 : 𝐒𝐢𝐧𝐠𝐥𝐞
 │ 🎂 𝐀𝐠𝐞 : 𝟏𝟖+
@@ -34,7 +34,7 @@ module.exports.run = async function({ api, event }) {
 ┌───────────────⭓
 │ 𝗖𝗢𝗡𝗧𝗔𝗖𝗧 𝗟𝗜𝗡𝗞𝗦
 ├───────────────
-│ 📘 𝗙𝗮𝗰𝗲𝗯𝗼𝗼𝗸:https://www.facebook.com/nk.naiem.khan.641816
+│ 📘 𝗙𝗮𝗰𝗲𝗯𝗼𝗼𝗸:https://www.facebook.com/profile.php?id=61581203436353
 │ 
 │ 💬 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽:
 │ https://wa.me/01908143017
