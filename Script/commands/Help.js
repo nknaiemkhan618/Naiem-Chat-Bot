@@ -32,7 +32,7 @@ module.exports.languages = {
 ┣━━━━━━━━━━━━━━━━┫
 ┃ ⚙ Prefix: %8
 ┃ 🤖 Bot Name: %9
-┃ 👑 Owner: 𝐍𝐤 𝐍𝐚𝐢𝐞𝐦 𝐊𝐡𝐚𝐧
+┃ 👑 Owner: 𝐀𝐒𝐇𝐑𝐀𝐅𝐔𝐋 𝐈𝐒𝐋𝐀𝐌
 ╰━━━━━━━━━━━━━━━━╯`,
         "helpList": "[ There are %1 commands. Use: \"%2help commandName\" to view more. ]",
         "user": "User",
@@ -85,7 +85,7 @@ module.exports.handleEvent = function ({ api, event, getText }) {
         command.config.commandCategory || "Unknown",  
         command.config.cooldowns || 0,  
         prefix,  
-        global.config.BOTNAME || "𝐍𝐚𝐢𝐞𝐦 𝐂𝐡𝐚𝐭 𝐁𝐨𝐭"  
+        global.config.BOTNAME || "আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ"  
     );  
 
     downloadImages(files => {  
@@ -115,7 +115,7 @@ module.exports.run = function ({ api, event, args, getText }) {
             command.config.commandCategory || "Unknown",  
             command.config.cooldowns || 0,  
             prefix,  
-            global.config.BOTNAME || "না্ঁঈ্ঁমে্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ"  
+            global.config.BOTNAME || "আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ"  
         );  
 
         downloadImages(files => {  
@@ -148,8 +148,8 @@ module.exports.run = function ({ api, event, args, getText }) {
 ${msg}
 ┣━━━━━━━━━━━━━━━━┫
 ┃ ⚙ Prefix: ${prefix}
-┃ 🤖 Bot Name: ${global.config.BOTNAME || "না্ঁঈ্ঁমে্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ"}
-┃ 👑 Owner: 𝐍𝐤 𝐍𝐚𝐢𝐞𝐦 𝐊𝐡𝐚𝐧
+┃ 🤖 Bot Name: ${global.config.BOTNAME || "আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ"}
+┃ 👑 Owner: 𝐀𝐒𝐇𝐑𝐀𝐅𝐔𝐋 𝐈𝐒𝐋𝐀𝐌�
 ╰━━━━━━━━━━━━━━━━╯`;
 
     downloadImages(files => {  
