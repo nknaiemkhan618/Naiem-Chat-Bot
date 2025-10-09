@@ -1,6 +1,7 @@
 const schedule = require('node-schedule');
 const moment = require('moment-timezone');
 const chalk = require('chalk');
+const fs = require('fs');
 
 // বাংলা বার
 const banglaDays = {
@@ -15,10 +16,10 @@ const banglaDays = {
 
 module.exports.config = {
   name: 'autosent',
-  version: '12.5.0',
+  version: '12.5.1',
   hasPermssion: 0,
-  credits: 'Âßhråfùl Îßlām',
-  description: 'Hourly auto message with BD Time, quotes & feelings (Full Design)',
+  credits: 'Âßhråfùl Îßlām + Fixed by GPT-5',
+  description: 'Hourly auto message with BD Time, quotes & feelings (Full Design + Persistent Index)',
   commandCategory: 'group messenger',
   usages: '[]',
   cooldowns: 3
@@ -118,15 +119,26 @@ function getBanglaDate(now) {
   };
 }
 
+// 🔄 Index File System
+const indexFile = './autosentIndex.json';
+function loadIndex() {
+  if (fs.existsSync(indexFile)) {
+    return JSON.parse(fs.readFileSync(indexFile, 'utf8'));
+  }
+  return { iQuote: 0, iFeeling: 0 };
+}
+function saveIndex(iQuote, iFeeling) {
+  fs.writeFileSync(indexFile, JSON.stringify({ iQuote, iFeeling }));
+}
+
+let { iQuote: indexQuote, iFeeling: indexFeeling } = loadIndex();
+
 module.exports.onLoad = ({ api }) => {
   console.log(chalk.bold.hex("#00ff99")("🌸 Auto Quote Message (BD TIME) Started 🌸"));
 
-  let indexQuote = 0;
-  let indexFeeling = 0;
-
   const rule = new schedule.RecurrenceRule();
   rule.tz = 'Asia/Dhaka';
-  rule.minute = 0;
+  rule.minute = 0; // প্রতি ঘণ্টার শুরুতে
 
   schedule.scheduleJob(rule, () => {
     const now = moment().tz('Asia/Dhaka');
@@ -139,8 +151,8 @@ module.exports.onLoad = ({ api }) => {
     const bangla = getBanglaDate(now);
     const banglaDay = banglaDays[engDay] || '';
 
-    const feeling = feelings[indexFeeling];
     const quote = quotes[indexQuote];
+    const feeling = feelings[indexFeeling];
 
     const msg = `
 ╔═❖═❖═❖═❖═❖═❖═╗  
@@ -163,20 +175,16 @@ module.exports.onLoad = ({ api }) => {
     💬 না বলা কিছু কথা 
 ═════════════════════
 
-═════════════════════
 ${quote}
-═════════════════════
 
-╔════════════════════╗
- 💖 Âßhråfùl Boos-এর মনের অনুভূতি💖
-╚════════════════════╝
+═════════════════════
 💭 𝐒𝐏𝐄𝐂𝐈𝐀𝐋 𝐅𝐄𝐄𝐋𝐈𝐍𝐆:
 ${feeling}
-╔════════════════════╗
- 🖤 With Love,  🖤 Âßhråfùl Boss.
-╚════════════════════╝
+═════════════════════
 
-𝐂𝐫𝐞𝐚𝐭𝐨𝐫 ━➢ Âßhråfùl Îßlām
+╔════════════════════╗
+🖤 With Love,  🖤 Âßhråfùl Boss 
+╚════════════════════╝
 `;
 
     if (!global.data?.allThreadID) return;
@@ -186,10 +194,12 @@ ${feeling}
       });
     });
 
-    console.log(chalk.hex("#00FFFF")(`✅ Sent quote ${indexQuote + 1} with feeling ${indexFeeling + 1}`));
-
+    // 🔁 পরবর্তী quote ও feeling সেট করা
     indexQuote = (indexQuote + 1) % quotes.length;
     indexFeeling = (indexFeeling + 1) % feelings.length;
+
+    saveIndex(indexQuote, indexFeeling);
+    console.log(chalk.hex("#00FFFF")(`✅ Sent quote ${indexQuote + 1} & feeling ${indexFeeling + 1}`));
   });
 };
 
