@@ -7,7 +7,7 @@ module.exports = {
     name: "uptime",
     version: "2.0.0",
     hasPermssion: 0,
-    credits: "SHAHADAT SAHU",
+    credits: "SHAHADAT U",
     description: "Show advanced system uptime.",
     commandCategory: "system",
     usages: "uptime",
