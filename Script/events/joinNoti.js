@@ -2,7 +2,7 @@ module.exports.config = {
   name: "joinnoti",
   eventType: ["log:subscribe"],
   version: "1.0.2",
-  credits: "𝐒𝐡𝐚𝐡𝐚𝐝𝐚𝐭 𝐈𝐬𝐥𝐚𝐦",
+  credits: "SHAHADAT SAHU",
   description: "Welcome message with optional image/video",
   dependencies: {
     "fs-extra": "",
@@ -28,13 +28,13 @@ module.exports.run = async function({ api, event }) {
   const { threadID } = event;
   
   const botPrefix = global.config.PREFIX || "/";
-  const botName = global.config.BOTNAME || "─꯭─⃝‌‌আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ";
+  const botName = global.config.BOTNAME || "𝗦𝗵𝗮𝗵𝗮𝗱𝗮𝘁 𝗖𝗵𝗮𝘁 𝗕𝗼𝘁";
 
  
   if (event.logMessageData.addedParticipants.some(i => i.userFbId == api.getCurrentUserID())) {
     await api.changeNickname(`[ ${botPrefix} ] • ${botName}`, threadID, api.getCurrentUserID());
 
-    api.sendMessage("চ্ঁলে্ঁ এ্ঁসে্ঁছি্ঁ ─꯭─⃝আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ এঁখঁনঁ তোঁমাঁদেঁরঁ সাঁথেঁ আঁড্ডাঁ দিঁবঁ..!", threadID, () => {
+    api.sendMessage("চ্ঁলে্ঁ এ্ঁসে্ঁছি্ঁ আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ এঁখঁনঁ তোঁমাঁদেঁরঁ সাঁথেঁ আঁড্ডাঁ দিঁবঁ..!", threadID, () => {
       const randomGifPath = path.join(__dirname, "cache", "randomgif");
       const allFiles = fs.readdirSync(randomGifPath).filter(file =>
         [".mp4", ".jpg", ".png", ".jpeg", ".gif", ".mp3"].some(ext => file.endsWith(ext))
@@ -56,7 +56,7 @@ ${botPrefix}Help
 ${botPrefix}Info
 ${botPrefix}Admin
 
-★ যেকোনো অভিযোগ অথবা হেল্প এর জন্য এডমিন 𝐍𝐚𝐢𝐞𝐦 কে নক করতে পারেন ★
+★ যেকোনো অভিযোগ অথবা হেল্প এর জন্য এডমিন 𝐒𝐡𝐚𝐡𝐚𝐝𝐚𝐭 কে নক করতে পারেন ★
 ➤𝐌𝐞𝐬𝐬𝐞𝐧𝐠𝐞𝐫: https://m.me/61581203436353?
 ➤𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩: https://wa.me/01908143017
 
@@ -98,7 +98,7 @@ ${botPrefix}Admin
 ➤ আশা করি আপনি এখানে হাসি-মজা করে 
 আড্ডা দিতে ভালোবাসবেন।😍
 ➤ সবার সাথে মিলেমিশে থাকবেন।😉
-➤ কুনো প্রকার সমস্যা হলে কিংবা প্রেম করতে ইচ্ছে হলে আশরাফুল বছের ইনবক্সে চলে যাবেন।
+➤ কুনো প্রকার সমস্যা হলে কিংবা প্রেম করতে ইচ্ছে হলে আশরাফুল বছের ইনবক্সে চলে যাবেন।�
 ➤ গ্রুপ এডমিনের কথা শুনবেন ও রুলস মেনে চলবেন।✅
 
 ›› প্রিয় {name},  
@@ -108,7 +108,7 @@ ${botPrefix}Admin
 
 💌 🌺 𝐖 𝐄 𝐋 𝐂 𝐎 𝐌 𝐄 🌺 💌
 ╭─╼╾─╼🌸╾─╼╾───╮
-─꯭─⃝‌‌আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ 🌺
+─꯭─⃝আ্ঁশ্ঁরা্ঁফু্ঁল্ঁ এ্ঁর্ঁ ফে্ঁমা্ঁস্ঁ ব্ঁট্ঁ 🌺
 ╰───╼╾─╼🌸╾─╼╾─╯
 
 ❖⋆══════════════════════════⋆❖` : threadData.customJoin;
