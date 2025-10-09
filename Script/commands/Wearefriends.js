@@ -2,7 +2,7 @@ module.exports.config = {
     name: 'time',
     version: '10.11',
     hasPermssion: 0,
-    credits: 'AIEM KHAN',
+    credits: 'NK NAIEM KHAN',
     description: 'প্রতি ঘণ্টায় সব লিংক একসাথে পাঠানো হবে (24 বার দিনে)!',
     commandCategory: 'noprefix',
     usages: '[]',
