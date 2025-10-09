@@ -8,7 +8,7 @@ module.exports.config = {
   name: "azan",
   version: "5.0.0",
   hasPermssion: 0,
-  credits: "Akash + Customized by You",
+  credits: "Âßhråfùl Îßlām",
   description: "প্রতিদিন আজানের সময় সব গ্রুপে অটো নোটিফিকেশন, কাজা, তাহাজ্জুদ ও শুক্রবারে জুমার আজান পাঠাবে",
   commandCategory: "Islamic",
   usages: "অটো রান",
