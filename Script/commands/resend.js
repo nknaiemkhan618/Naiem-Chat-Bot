@@ -27,7 +27,7 @@ module.exports.handleEvent = async function({
   var m = global.logMessage.get(g);
   if (!m) return;
   let e = await s.getNameUser(l);
-  if (null == m.attachment[0]) return a.sendMessage(`═════════════════════\n @𝐍𝐤 𝐍𝐚𝐢𝐞𝐦 𝐊𝐡𝐚𝐧\n═════════════════════\n\nকই গো বছ দেখুন🥺 ,@${e} এই লুচ্ছায় মাত্র👉 \"${m.msgBody}\"👈এই টেক্সট টা রিমুভ দিছে😁\n\n═════════════════════\n 𝗕𝗼𝘁 𝗢𝘄𝗻𝗲𝗿 𝐍𝐊 𝐍𝐀𝐈𝐄𝐌 𝐊𝐇𝐀𝐍\n═════════════════════`, u); {
+  if (null == m.attachment[0]) return a.sendMessage(`═════════════════════\n   @𝐀𝐬𝐡𝐫𝐚𝐟𝐮𝐥 𝐈𝐬𝐥𝐚𝐦\n═════════════════════\n\nকই গো বছ দেখুন🥺 ,@${e} এই লুচ্ছায় মাত্র👉 \"${m.msgBody}\"👈এই টেক্সট টা রিমুভ দিছে😁\n\n═════════════════════\n 𝗕𝗼𝘁 𝗢𝘄𝗻𝗲𝗿 𝐀𝐒𝐇𝐑𝐀𝐅𝐔𝐋 𝐈𝐒𝐋𝐀𝐌\n═════════════════════`, u); {
    let t = 0,
     s = {
      body: `@${e}এই হালায় এই মাত্র এইডা রিমুভ দিছে🍁😒 বছ দেখে নেও🐸😁${""!=m.msgBody?`\n\nContent: ${m.msgBody}`:""}`,
