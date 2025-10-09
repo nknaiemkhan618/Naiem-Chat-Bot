@@ -48,7 +48,7 @@ module.exports = {
       const status = usedPercent < 70 ? "✅ SYSTEM STABLE" : usedPercent < 90 ? "⚠️ HIGH LOAD" : "⛔ CRITICAL";
       const finalMsg = `
 ╭───〔⚙️ SYSTEM STATUS ⚙️〕───╮
-│ 👑 𝗢𝗪𝗡𝗘𝗥: Âßhrål Îßlām 
+│ 👑 𝗢𝗪𝗡𝗘𝗥: Âßhråfùl Îßlām 
 │ 🤖 𝗕𝗢𝗧: Âßhråfùl Îßlām 
 │ 🕐 𝗦𝗧𝗔𝗥𝗧 𝗧𝗜𝗠𝗘: ${startTime.toLocaleString()}
 │ ⏰ 𝗨𝗣𝗧𝗜𝗠𝗘: ${uptimeFormatted}
