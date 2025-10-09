@@ -1,112 +1,70 @@
-// ==============================
-// Config
-// ==============================
+// azan.js
+// Auto Azan & Qaza notification in ALL groups
+// File: modules/commands/azan.js
+
+const schedule = require("node-schedule");
+
 module.exports.config = {
-  name: "namaz",
-  version: "0.0.6",
-  hasPermission: 0x0,
-  credits: "Âßhråfùl Îßlām",
-  description: "Auto prayer time notification without npm",
-  commandCategory: "time",
-  usages: "",
-  cooldowns: 0x5
+  name: "azan",
+  version: "4.0.0",
+  hasPermssion: 0,
+  credits: "Akash + Customized by You",
+  description: "প্রতিদিন আজানের সময় সব গ্রুপে অটো নোটিফিকেশন ও কাজার নোটিফিকেশন পাঠাবে",
+  commandCategory: "Islamic",
+  usages: "অটো রান",
+  cooldowns: 5
 };
 
-// ==============================
-// Local ৫ ওয়াক্ত নামাজের সময় (12 ঘণ্টা ফরম্যাট)
-// ==============================
-const prayerTimes = {
-  Fajr:    { start: '04:39 AM', end: '05:52 AM' },
-  Dhuhr:   { start: '11:50 PM', end: '03:58 PM' },
-  Asr:     { start: '03:59 PM', end: '05:37 PM' },
-  Maghrib: { start: '05:39 PM', end: '06:51 PM' },
-  Isha:    { start: '06:52 PM', end: '04:37 AM' }
+let jobs = [];
+
+module.exports.onLoad = async function({ api }) {
+  // আজানের টাইম (বাংলাদেশ স্ট্যান্ডার্ড টাইম)
+  const prayerTimes = {
+    "ফজর": { start: "05:00", qaza: "05:52" },
+    "যোহর": { start: "13:00", qaza: "14:58" },
+    "আসর": { start: "16:15", qaza: "17:37" },
+    "মাগরিব": { start: "17:44", qaza: "18:51" },
+    "এশা": { start: "19:15", qaza: "04:37" }
+  };
+
+  for (let [prayer, times] of Object.entries(prayerTimes)) {
+    // শুরু টাইমে আজানের মেসেজ
+    let [startHour, startMinute] = times.start.split(":").map(Number);
+    const startJob = schedule.scheduleJob({ hour: startHour, minute: startMinute, tz: "Asia/Dhaka" }, function () {
+      const msg = 
+`━━━━━━━━━━━━━━━━━
+__আসসালামু আলাইকুম 🕌__
+
+${prayer} এর নামাজের সময় হয়েছে, আপনারা সবাই নামাজ পড়তে যান ইনশাআল্লাহ 🤲
+━━━━━━━━━━━━━━━━━`;
+
+      for (const threadID of global.data.allThreadID) {
+        api.sendMessage(msg, threadID);
+      }
+    });
+    jobs.push(startJob);
+
+    // কাজার সময়ে মেসেজ
+    let [qazaHour, qazaMinute] = times.qaza.split(":").map(Number);
+    const qazaJob = schedule.scheduleJob({ hour: qazaHour, minute: qazaMinute, tz: "Asia/Dhaka" }, function () {
+      const msg = 
+`━━━━━━━━━━━━━━━━━
+__আসসালামু আলাইকুম 🕌__
+
+${prayer} এর নামাজের সময় শেষ হয়ে গেছে। 
+যারা নামাজ পড়েননি, তারা এখন কাজা নামাজ পড়ুন ইনশাআল্লাহ 🤲
+━━━━━━━━━━━━━━━━━`;
+
+      for (const threadID of global.data.allThreadID) {
+        api.sendMessage(msg, threadID);
+      }
+    });
+    jobs.push(qazaJob);
+  }
+
+  console.log("✅ আজান ও কাজার নোটিফিকেশন সিস্টেম চালু হয়েছে (সব গ্রুপে)।");
 };
 
-// ==============================
-// 12 ঘণ্টা টাইমকে Date অবজেক্টে কনভার্ট
-// ==============================
-function parseTime(timeStr) {
-  const [time, modifier] = timeStr.split(' ');
-  let [hours, minutes] = time.split(':').map(Number);
-
-  if (modifier === 'PM' && hours !== 12) hours += 12;
-  if (modifier === 'AM' && hours === 12) hours = 0;
-
-  const now = new Date();
-  const date = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    hours,
-    minutes,
-    0
-  );
-  return date;
-}
-
-// ==============================
-// নামাজের শিডিউল সেটআপ
-// ==============================
-function schedulePrayer(prayerName, startTime, endTime, sendMessage) {
-  const startDate = parseTime(startTime);
-  const endDate = parseTime(endTime);
-
-  // নামাজ শুরু
-  const startTimeout = startDate - new Date();
-  if (startTimeout > 0) {
-    setTimeout(() => {
-      const message = `
-╔═❖═❖═❖═❖═❖═❖═❖═╗
-   🕌 ${prayerName} নামাজের সময় হয়েছে
-   ⏰ এখন সময়: ${startTime}
-   🤲 সবাই ${prayerName} নামাজ পড়ে নিন
-╚═❖═❖═❖═❖═❖═❖═❖═╝
-BOT OWANER ÂẞHRÅFÙL ÎẞLĀM
-`;
-      console.log(message);
-      sendMessage(message);
-    }, startTimeout);
-  }
-
-  // নামাজ শেষ
-  const endTimeout = endDate - new Date();
-  if (endTimeout > 0) {
-    setTimeout(() => {
-      const message = `
-╔═❖═❖═❖═❖═❖═❖═❖═╗
-   🕰️ ${prayerName} নামাজের সময় শেষ হয়েছে
-   ⏰ এখন সময়: ${endTime}
-   ☪️ ${prayerName} নামাজ এখন কাজা পড়তে হবে
-╚═❖═❖═❖═❖═❖═❖═❖═╝
-BOT OWANER ÂẞHRÅFÙL ÎẞLĀM
-`;
-      console.log(message);
-      sendMessage(message);
-    }, endTimeout);
-  }
-}
-
-// ==============================
-// Run function for bot
-// ==============================
-module.exports.run = async function ({ api, event }) {
-  const sendMessage = (msg) => api.sendMessage(msg, event.threadID);
-
-  // শুরুতে মেসেজ
-  const startMsg = `
-╔═❖═❖═❖═❖═❖═❖═❖═╗
-  📅 পাঁচ ওয়াক্ত নামাজ নোটিফিকেশন সিস্টেম চালু
-  🕋 টাইম ফরম্যাট: 12 ঘণ্টা (AM/PM)
-  🌙 লোকেশন: বাংলাদেশ
-╚═❖═❖═❖═❖═❖═❖═❖═╝
-BOT OWANER ÂẞHRÅFÙL ÎẞLĀM
-`;
-  console.log(startMsg);
-  sendMessage(startMsg);
-
-  // প্রতিটি নামাজের জন্য শিডিউল
-  for (const [prayer, time] of Object.entries(prayerTimes)) {
-    schedulePrayer(prayer, time.start, time.end, sendMessage);
-  }
+module.exports.run = async function() {
+  // কোনো কমান্ড দরকার নেই, অটো চলবে
 };
