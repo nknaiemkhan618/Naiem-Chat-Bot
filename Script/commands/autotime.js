@@ -15,7 +15,7 @@ const banglaDays = {
 
 module.exports.config = {
   name: 'autosent',
-  version: '12.5.0',
+  version: '12.5.2',
   hasPermssion: 0,
   credits: 'Âßhråfùl Îßlām',
   description: 'Hourly auto message with BD Time, quotes & feelings (Full Design)',
@@ -52,7 +52,7 @@ const quotes = [
   "💔 আমি চাইনি সম্পর্ক শেষ হোক,\nকিন্তু একা লড়তে লড়তে ক্লান্ত হয়ে গেছি।\n🌧️ আমি ভালোবেসেছিলাম সত্যি করে,\nসে ভালোবেসেছিলো সময় কাটানোর জন্য।\n🥀 এখন শুধু স্মৃতি বাকি, বাকি আমি।"
 ];
 
-// স্পেশাল সংলাপ (Feelings)
+// ====== স্পেশাল সংলাপ (Feelings) ======
 const feelings = [
   "তুমি থাকলে এখন হয়তো একসাথে বসে রাতের তারাগুলো দেখতাম। 🖤",
   "তুমি থাকলে এখন দুষ্টু মিষ্টি গল্প করতাম। 🌙",
@@ -80,7 +80,7 @@ const feelings = [
   "তুমি থাকলে দিনের শেষ প্রার্থনা একসাথে করতাম। 🥀"
 ];
 
-// বাংলা তারিখের হিসাব
+// ====== সঠিক বাংলা তারিখ হিসাব ======
 function getBanglaDate(now) {
   const banglaMonths = [
     "বৈশাখ","জ্যৈষ্ঠ","আষাঢ়","শ্রাবণ",
@@ -88,18 +88,31 @@ function getBanglaDate(now) {
     "পৌষ","মাঘ","ফাল্গুন","চৈত্র"
   ];
 
-  const bdYearOffset = 593;
-  let banglaYear = now.year() - bdYearOffset;
+  const banglaMonthDays = [31,31,31,31,30,30,30,30,30,30,29,30];
 
-  let dayOfYear = now.dayOfYear() - 103;
-  if (dayOfYear <= 0) {
-    dayOfYear += now.isLeapYear() ? 366 : 365;
+  const bdYearOffset = 593;
+  let engYear = now.year();
+  let engMonth = now.month() + 1; // 1-12
+  let engDate = now.date();
+
+  let banglaYear = engYear - bdYearOffset;
+
+  const monthDaysCumulative = [0,31,59,90,120,151,181,212,243,273,304,334];
+  let daysPassed = monthDaysCumulative[engMonth - 1] + engDate;
+
+  if ((engYear % 4 === 0 && engYear % 100 !== 0) || engYear % 400 === 0) {
+    if (engMonth > 2) daysPassed += 1;
+  }
+
+  let banglaDateNum = daysPassed - 103;
+  if (banglaDateNum <= 0) {
+    banglaDateNum += ((engYear % 4 === 0 && engYear % 100 !== 0) || engYear % 400 === 0) ? 366 : 365;
     banglaYear -= 1;
   }
 
-  const banglaMonthDays = [31,31,31,31,30,30,30,30,30,30,29,30];
-  let remainingDays = dayOfYear;
-  let banglaMonthIndex, banglaDate;
+  let remainingDays = banglaDateNum;
+  let banglaMonthIndex = 0;
+  let banglaDate = 1;
 
   for (let i = 0; i < banglaMonths.length; i++) {
     if (remainingDays <= banglaMonthDays[i]) {
@@ -118,6 +131,7 @@ function getBanglaDate(now) {
   };
 }
 
+// ====== Auto Message Scheduler ======
 module.exports.onLoad = ({ api }) => {
   console.log(chalk.bold.hex("#00ff99")("🌸 Auto Quote Message (BD TIME) Started 🌸"));
 
