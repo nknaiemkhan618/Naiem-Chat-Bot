@@ -33,7 +33,7 @@ module.exports.run = async ({ api, event }) => {
  if (diffDays === 0) {
  const happyBirthdayMessage = 
 `╔═══ 🎉 𝐇𝐀𝐏𝐏𝐘 𝐁𝐈𝐑𝐓𝐇𝐃𝐀𝐘 🎉 ════╗
-║ 𝐎𝐔𝐑 𝐁𝐎𝐒𝐒 - 𝐍𝐊 𝐍𝐀𝐈𝐄𝐌 𝐊𝐇𝐀𝐍 💖 
+║ 𝐎𝐔𝐑 𝐁𝐎𝐒𝐒 - 𝐀𝐒𝐇𝐑𝐀𝐅𝐔𝐋 𝐈𝐒𝐋𝐀𝐌 💖 
 ╟─────────────────
 ║ 🎂 Everyone Please Wish Him Today! 
 ║ 🥳 আজ আমাদের Boss এর জন্মদিন! 
@@ -41,14 +41,14 @@ module.exports.run = async ({ api, event }) => {
 ╟─────────────────
 ║ 📩 Connect With Him: 
 ║ ➤ 📘 Facebook : 
-║ https://www.facebook.com/nk.naiem.khan.641816
+║ https://www.facebook.com/profile.php?id=61581203436353
 ║ ➤ 💬 Messenger : 
-║ https://m.me/nk.naiem.khan.641816 
+║ https://m.me/61581203436353? 
 ║ ➤ 📱 WhatsApp : 
 ║ https://wa.me/+8801908143017 
 ╟─────────────────
 ║ 🫶 উইশ করো, দোয়া করো?
-║ এবং ভালোবাসা জানাও প্রিয় বস নাঈম কে! ❤️‍🩹 
+║ এবং ভালোবাসা জানাও প্রিয় বস আশরাফুল কে! ❤️‍🩹 
 ╚═════════════════════════╝`;
  return api.sendMessage(happyBirthdayMessage, event.threadID, event.messageID);
  }
@@ -56,7 +56,7 @@ module.exports.run = async ({ api, event }) => {
  if (diffDays < 0) {
  const leakMessage =
 `╔═══════════════════╗
-║ 🎂 Admin 𝐍𝐊 𝐍𝐀𝐈𝐄𝐌 𝐊𝐇𝐀𝐍
+║ 🎂 Admin 𝐀𝐒𝐇𝐑𝐀𝐅𝐔𝐋 𝐈𝐒𝐋𝐀𝐌�
 ║ এর জন্মদিন ফাঁস হয়ে গেছে ❤️‍🩹🤌
 ╚═══════════════════╝`;
  return api.sendMessage(leakMessage, event.threadID, event.messageID);
@@ -64,7 +64,7 @@ module.exports.run = async ({ api, event }) => {
 
  const countdownMessage = 
 `╔═══════════════════╗
-║ 🎂 Admin 𝐍𝐊 𝐍𝐀𝐈𝐄𝐌 𝐊𝐇𝐀𝐍
+║ 🎂 Admin 𝐀𝐒𝐇𝐑𝐀𝐅𝐔𝐋 𝐈𝐒𝐋𝐀𝐌
 ║ এর জন্মদিন ফাঁস হয়ে গেছে ❤️‍🩹🤌
 ║═══════════════════
 ║ 📅 Days : ${diffDays}
@@ -73,7 +73,7 @@ module.exports.run = async ({ api, event }) => {
 ║ ⏳ Seconds : ${diffSeconds}
 ╚════════════════════╝`;
 
- const url = `https://www.facebook.com/nk.naiem.khan.641816/picture?height=720&width=720`;
+ const url = `https://www.facebook.com/profile.php?id=61581203436353/picture?height=720&width=720`;
 
  try {
  const response = await axios({
