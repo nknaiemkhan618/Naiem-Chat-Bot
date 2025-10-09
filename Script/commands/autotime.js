@@ -5,7 +5,7 @@ const fs = require('fs');
 
 // বাংলা বার
 const banglaDays = {
-  Sunday: "",
+  Sunday: "রবিবার",
   Monday: "সোমবার",
   Tuesday: "মঙ্গলবার",
   Wednesday: "বুধবার",
@@ -18,7 +18,7 @@ module.exports.config = {
   name: 'autosent',
   version: '12.5.1',
   hasPermssion: 0,
-  credits: 'Âßhråfùl Îßlām + Fixed by GPT-5',
+  credits: 'Âßhråfùl Îßlām',
   description: 'Hourly auto message with BD Time, quotes & feelings (Full Design + Persistent Index)',
   commandCategory: 'group messenger',
   usages: '[]',
