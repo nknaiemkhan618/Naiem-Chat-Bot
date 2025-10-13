@@ -43,7 +43,7 @@ module.exports.run = async ({ event, api, args, Users }) => {
  'attachment': fs.createReadStream(outputPath, {
  'highWaterMark': 131072
  }),
- 'body': "তুই একটা বলদ\nমাথায় গোবর-গু ছাড়া কিছু নাই🤣😹"
+ 'body': "তুই একটা বলদ\nমাথায় গু আর পাছায় ব্রেন নিয়ে ঘুরিস মেয়েদের মতো🤣😹"
  }, event.threadID, () => fs.unlinkSync(outputPath), event.messageID);
  } catch (error) {
  api.sendMessage(error.stack, event.threadID);
