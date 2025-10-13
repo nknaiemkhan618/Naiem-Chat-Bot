@@ -32,7 +32,7 @@ module.exports.run = async ({ event, api, args, Users }) => {
  var targetUserId = Object.keys(event.mentions)[0] || event.senderID;
  const canvasObj = canvas.createCanvas(500, 670);
  const ctx = canvasObj.getContext('2d');
- const templateImage = await canvas.loadImage("https://i.imgur.com/jHrYZ5Y.jpeg");
+ const templateImage = await canvas.loadImage("https://i.imgur.com/0YVRDqz.jpeg");
  var profilePicResponse = await superfetch.get("https://graph.facebook.com/" + targetUserId + "/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662");
  profilePicResponse = await this.circle(profilePicResponse.body);
  ctx.drawImage(templateImage, 0, 0, canvasObj.width, canvasObj.height);
